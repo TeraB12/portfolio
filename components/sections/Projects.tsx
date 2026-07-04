@@ -332,10 +332,43 @@ function AndroidSchematic() {
   );
 }
 
+function MeliSchematic() {
+  return (
+    <svg
+      viewBox="0 0 400 300"
+      className="absolute inset-0 h-full w-full"
+      role="img"
+      aria-label="Esquema del sistema Meli: varias cuentas de Mercado Libre convergen en un núcleo que consolida ventas y estadísticas por empresa."
+    >
+      {/* tres cuentas de ML convergen en el sistema */}
+      <SchLine d="M84 75 L200 143" />
+      <SchLine d="M200 67 L200 143" />
+      <SchLine d="M316 75 L200 143" />
+      {/* el sistema reparte hacia ventas y estadísticas */}
+      <SchLine d="M200 173 L110 237" />
+      <SchLine d="M200 173 L290 237" />
+      {/* multi-empresa: el núcleo cuelga de las empresas que conviven */}
+      <SchLine d="M246 158 L344 158" dashed />
+      {/* la señal: una venta de la cuenta A atraviesa el sistema y aterriza en ventas */}
+      <SignalPath d="M84 75 L200 158 L110 237" />
+      <SchNode x={84} y={64} w={56} h={22} label="ML A" />
+      <SchNode x={200} y={56} w={56} h={22} label="ML B" />
+      <SchNode x={316} y={64} w={56} h={22} label="ML C" />
+      <SchNode x={344} y={158} w={80} h={22} label="EMPRESAS" />
+      <SchNode x={110} y={248} w={62} h={22} label="VENTAS" />
+      <SchNode x={290} y={248} w={104} h={22} label="ESTADÍSTICAS" />
+      <SchNode x={200} y={158} w={92} h={30} label="SISTEMA" accent />
+      <circle cx={237} cy={150} r={2.5} fill={SCH.amber} className="led-b" />
+    </svg>
+  );
+}
+
 function Schematic({ id }: { id: ProjectItem["id"] }) {
   switch (id) {
     case "terab":
       return <TerabSchematic />;
+    case "meli":
+      return <MeliSchematic />;
     case "catalogos":
       return <CatalogosSchematic />;
     case "asistente":

@@ -87,6 +87,15 @@ export const EXPERIENCE = {
     },
     {
       period: "2026",
+      role: "Sistema automático Meli",
+      org: "Proyecto a medida",
+      summary:
+        "Plataforma de ventas y estadísticas para Mercado Libre, multi-cuenta y multi-empresa.",
+      detail:
+        "Un solo sistema donde el comercio gestiona todas sus ventas y estadísticas de Mercado Libre sin entrar cuenta por cuenta: soporta múltiples cuentas de ML y múltiples empresas conviviendo, cada una con sus números y su operación. Construido en TypeScript de punta a punta.",
+    },
+    {
+      period: "2026",
       role: "Plataforma para consultora",
       org: "Evolux",
       summary:
@@ -247,6 +256,31 @@ export const PROJECTS = {
       schematic: true,
       // la mejor demo es el cliente real operando, no el panel de administración
       url: "https://myaimportaciones.com.ar",
+    },
+    {
+      id: "meli",
+      name: "Sistema automático Meli",
+      kind: "Gestión de ventas y estadísticas para Mercado Libre",
+      description:
+        "La plataforma donde un comercio gestiona todas sus ventas y estadísticas de Mercado Libre desde un solo lugar, con soporte para múltiples cuentas y múltiples empresas.",
+      specsRing: ["MERCADO LIBRE", "MULTI-CUENTA", "MULTI-EMPRESA", "TYPESCRIPT"],
+      callouts: [
+        {
+          t: "Varias cuentas, una pantalla",
+          d: "Todas las cuentas de Mercado Libre conectadas y gestionadas sin entrar una por una.",
+        },
+        {
+          t: "Estadísticas del negocio",
+          d: "Ventas y métricas consolidadas para decidir con números, no con sensaciones.",
+        },
+        {
+          t: "Multi-empresa",
+          d: "Varias empresas conviven en el mismo sistema, cada una con su operación y sus datos.",
+        },
+      ],
+      metrics: [],
+      schematic: true,
+      url: null,
     },
     {
       id: "catalogos",
