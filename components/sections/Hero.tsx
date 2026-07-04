@@ -134,10 +134,14 @@ export function Hero() {
   return (
     <section
       id="inicio"
-      className="relative min-h-[100svh] overflow-hidden pt-16"
+      className="relative flex min-h-[100svh] flex-col overflow-hidden pt-16 md:block"
     >
-      {/* capa fondo: el electrocardiograma (se dibuja y late solo) */}
-      <HeroSignal yRatio={0.62} />
+      {/* capa fondo (solo md+): el electrocardiograma a pantalla completa.
+          En mobile el ECG vive como franja EN FLUJO entre el nombre y el texto:
+          así jamás puede pisar la tipografía, mida lo que mida la pantalla. */}
+      <div aria-hidden className="absolute inset-0 hidden md:block">
+        <HeroSignal yRatio={0.62} />
+      </div>
 
       {/* telemetría honesta: el único bloque mono del hero */}
       <motion.div
@@ -179,9 +183,16 @@ export function Hero() {
         </h1>
       </div>
 
-      {/* debajo de la línea del ECG: tagline + subline + CTAs */}
+      {/* mobile: la señal como franja propia, "subrayando" el nombre */}
+      <div aria-hidden className="relative mt-10 h-20 w-full md:hidden">
+        <HeroSignal yRatio={0.5} />
+      </div>
+
+      {/* debajo de la línea del ECG: tagline + subline + CTAs.
+          Mobile: en flujo, empujado hacia abajo (mt-auto). Desktop: absoluto,
+          anclado abajo o al 66% según la altura real del viewport. */}
       <div
-        className={`absolute inset-x-0 bottom-6 z-10 pr-6 md:pr-12 [@media(min-height:760px)]:bottom-auto [@media(min-height:760px)]:top-[66%] ${LEFT_RAIL}`}
+        className={`relative z-10 mt-auto pb-10 pr-6 md:absolute md:inset-x-0 md:bottom-6 md:mt-0 md:pb-0 md:pr-12 [@media(min-width:768px)_and_(min-height:760px)]:bottom-auto [@media(min-width:768px)_and_(min-height:760px)]:top-[66%] ${LEFT_RAIL}`}
       >
         <BootRise delay={base + 0.75} reduced={reduced}>
           <p className="text-base text-ink sm:text-lg md:text-xl">

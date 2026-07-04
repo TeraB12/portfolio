@@ -245,7 +245,8 @@ export const PROJECTS = {
       metrics: [],
       // [EDITÁ] Reemplazar por screenshot real del panel cuando quieras exponerlo
       schematic: true,
-      url: "https://panel.plataformaterab.com",
+      // la mejor demo es el cliente real operando, no el panel de administración
+      url: "https://myaimportaciones.com.ar",
     },
     {
       id: "catalogos",
