@@ -61,7 +61,7 @@ export const ABOUT = {
   ficha: [
     { k: "BASE", v: "Córdoba, AR" },
     { k: "ENFOQUE", v: "Producto end-to-end" },
-    { k: "EN PRODUCCIÓN", v: "TeraB + clientes" },
+    { k: "EN PRODUCCIÓN", v: "Plataforma + clientes" },
     { k: "DISPONIBLE", v: "Proyectos a medida" },
   ],
 } as const;
@@ -86,6 +86,15 @@ export const EXPERIENCE = {
         "Migración de más de 2.300 productos con variantes y fotos, configuración de POS para la venta diaria, facturación electrónica, catálogos para revendedores con subdominios automáticos y capacitación del equipo. La operación completa del comercio corre sobre la plataforma.",
     },
     {
+      period: "2026",
+      role: "Plataforma para consultora",
+      org: "Evolux",
+      summary:
+        "Desarrollo web para una consultora de cursos de e-commerce y gestión comercial.",
+      detail:
+        "Diseño y desarrollo a medida de la plataforma web de Evolux: la presentación de la consultora y de su oferta de cursos de e-commerce y gestión comercial, construida de punta a punta.",
+    },
+    {
       period: "MAR 2025-HOY",
       role: "Diplomatura en Full Stack",
       org: "En curso",
@@ -107,6 +116,15 @@ export const EXPERIENCE = {
         "Cultura digital",
         "Inglés avanzado",
       ],
+    },
+    {
+      period: "2022",
+      role: "Primer cliente real",
+      org: "Falling Life",
+      summary:
+        "Web completa para un servidor de roleplay de GTA V: mi primera experiencia con un cliente de verdad.",
+      detail:
+        "El primer proyecto grande: la web oficial de un servidor de roleplay de GTA V, hecha a pulso con HTML, CSS y JavaScript. Ahí aprendí lo que no enseña ningún curso: escuchar requerimientos, entregar a tiempo y ajustar con el feedback del cliente.",
     },
   ],
 } as const;
@@ -296,7 +314,7 @@ export const PROJECTS = {
 } as const;
 
 // Archivo de proyectos: el recorrido antes y alrededor de la plataforma.
-// No venden: cuentan. Datos sacados de los repos reales de GitHub.
+// No venden: cuentan. Sin links al código (decisión de Mateo); solo demos vivas.
 export const PROJECT_ARCHIVE = {
   title: "Archivo",
   intro: "El recorrido también cuenta: del primer proyecto grande a los finales de cada etapa.",
@@ -305,10 +323,9 @@ export const PROJECT_ARCHIVE = {
       name: "Falling Life",
       year: "2022",
       description:
-        "Web completa para un servidor de roleplay de GTA V. Mi primer proyecto grande, hecho a pulso con HTML, CSS y JavaScript.",
+        "Web completa para un servidor de roleplay de GTA V. Mi primer proyecto grande y mi primer cliente real, hecho a pulso con HTML, CSS y JavaScript.",
       stack: ["HTML", "CSS", "JavaScript"],
-      url: "https://github.com/TeraB12/Proyecto-Final-Falling-Life",
-      demo: "https://fallinglife-finalproyect.netlify.app",
+      link: "https://fallinglife-finalproyect.netlify.app",
     },
     {
       name: "Sneakers Hub",
@@ -316,17 +333,15 @@ export const PROJECT_ARCHIVE = {
       description:
         "E-commerce de zapatillas construido y reconstruido en varias etapas: Express, MongoDB, WebSockets y una arquitectura por capas con JWT, roles y tickets de compra.",
       stack: ["Node.js", "Express", "MongoDB"],
-      url: "https://github.com/TeraB12/Backend2-Ecommerce",
-      demo: null,
+      link: null,
     },
     {
       name: "Evolux",
       year: "2026",
       description:
-        "Identidad web para una consultora de e-commerce premium orientada a Mercado Libre.",
+        "Plataforma web para una consultora que ofrece cursos de e-commerce y gestión comercial.",
       stack: ["HTML", "CSS", "JavaScript"],
-      url: "https://github.com/TeraB12/evolux-web",
-      demo: null,
+      link: null,
     },
   ],
 } as const;

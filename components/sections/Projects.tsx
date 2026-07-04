@@ -15,6 +15,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ArrowUpRight } from "lucide-react";
 
 import { PROJECTS, PROJECT_ARCHIVE } from "@/content/data";
+import { cn } from "@/lib/utils";
 import { EASE, VIEWPORT_ONCE } from "@/lib/motion";
 import { Section } from "@/components/ui/Section";
 import { SectionTitle } from "@/components/ui/SectionTitle";
@@ -560,9 +561,54 @@ export function Projects() {
 
 /* ============================================================
    Archivo: el recorrido antes y alrededor de la plataforma.
-   Filas editoriales con link al repo real; no venden, cuentan.
+   Filas editoriales SIN links al código (decisión de Mateo);
+   solo linkea la demo viva cuando existe.
    ============================================================ */
+function ArchiveRowContent({
+  p,
+  linked,
+}: {
+  p: (typeof PROJECT_ARCHIVE)["items"][number];
+  linked: boolean;
+}) {
+  return (
+    <>
+      <span className="order-1 font-mono text-[12px] tracking-wide text-dim md:order-none">
+        {p.year}
+      </span>
+      <span className="col-span-2 md:col-span-1">
+        <span className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+          <span
+            className={cn(
+              "font-display text-xl font-bold text-ink md:text-2xl",
+              linked && "transition-colors duration-300 group-hover:text-pulse",
+            )}
+          >
+            {p.name}
+          </span>
+          <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
+            {p.stack.join("  /  ")}
+          </span>
+        </span>
+        <span className="mt-2 block max-w-[62ch] text-[15px] leading-relaxed text-dim">
+          {p.description}
+        </span>
+      </span>
+      {linked && (
+        <ArrowUpRight
+          aria-hidden
+          strokeWidth={1.5}
+          className="h-4 w-4 self-center text-dim transition-all duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-pulse"
+        />
+      )}
+    </>
+  );
+}
+
 function ProjectArchive() {
+  const rowClass =
+    "grid grid-cols-[1fr_auto] items-baseline gap-x-6 gap-y-2 border-b border-hairline py-7 md:grid-cols-[110px_1fr_auto]";
+
   return (
     <div className="mx-auto mt-28 max-w-[1400px] px-6 md:mt-36 md:px-12 lg:pl-28 lg:pr-20">
       <Reveal>
@@ -577,34 +623,24 @@ function ProjectArchive() {
       <div className="mt-10 border-t border-hairline">
         {PROJECT_ARCHIVE.items.map((p, i) => (
           <Reveal key={p.name} delay={i * 0.08}>
-            <a
-              href={p.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group grid grid-cols-[1fr_auto] items-baseline gap-x-6 gap-y-2 border-b border-hairline py-7 transition-colors duration-300 hover:bg-surface/60 md:grid-cols-[110px_1fr_auto]"
-            >
-              <span className="order-1 font-mono text-[12px] tracking-wide text-dim md:order-none">
-                {p.year}
-              </span>
-              <span className="col-span-2 md:col-span-1">
-                <span className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
-                  <span className="font-display text-xl font-bold text-ink transition-colors duration-300 group-hover:text-pulse md:text-2xl">
-                    {p.name}
-                  </span>
-                  <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-                    {p.stack.join("  /  ")}
-                  </span>
-                </span>
-                <span className="mt-2 block max-w-[62ch] text-[15px] leading-relaxed text-dim">
-                  {p.description}
-                </span>
-              </span>
-              <ArrowUpRight
-                aria-hidden
-                strokeWidth={1.5}
-                className="h-4 w-4 self-center text-dim transition-all duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-pulse"
-              />
-            </a>
+            {p.link ? (
+              <a
+                href={p.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`Ver ${p.name} en vivo`}
+                className={cn(
+                  rowClass,
+                  "group transition-colors duration-300 hover:bg-surface/60",
+                )}
+              >
+                <ArchiveRowContent p={p} linked />
+              </a>
+            ) : (
+              <div className={rowClass}>
+                <ArchiveRowContent p={p} linked={false} />
+              </div>
+            )}
           </Reveal>
         ))}
       </div>
