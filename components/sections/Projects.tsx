@@ -156,7 +156,7 @@ function TerabSchematic() {
       viewBox="0 0 400 300"
       className="absolute inset-0 h-full w-full"
       role="img"
-      aria-label="Esquema de la plataforma: un núcleo central conectado con panel, tiendas, POS, API, base de datos, app Android e inteligencia artificial."
+      aria-label="Esquema de la plataforma: un centro que conecta el panel, las tiendas, la caja, el servidor, los datos, la app del celular y la inteligencia artificial."
     >
       {/* conexiones núcleo, satélites */}
       <SchLine d="M200 158 L84 72" />
@@ -170,12 +170,12 @@ function TerabSchematic() {
       <SignalPath d="M316 72 L200 158 L100 248" />
       <SchNode x={84} y={72} w={56} h={22} label="PANEL" />
       <SchNode x={200} y={52} w={64} h={22} label="TIENDAS" />
-      <SchNode x={316} y={72} w={44} h={22} label="POS" />
-      <SchNode x={60} y={158} w={66} h={22} label="ANDROID" />
-      <SchNode x={344} y={158} w={44} h={22} label="API" />
-      <SchNode x={100} y={248} w={40} h={22} label="DB" />
+      <SchNode x={316} y={72} w={48} h={22} label="CAJA" />
+      <SchNode x={60} y={158} w={66} h={22} label="CELULAR" />
+      <SchNode x={344} y={158} w={66} h={22} label="SERVIDOR" />
+      <SchNode x={100} y={248} w={52} h={22} label="DATOS" />
       <SchNode x={300} y={248} w={40} h={22} label="IA" />
-      <SchNode x={200} y={158} w={92} h={30} label="CORE" accent />
+      <SchNode x={200} y={158} w={92} h={30} label="CENTRO" accent />
       <circle cx={237} cy={150} r={2.5} fill={SCH.amber} className="led" />
     </svg>
   );
@@ -187,7 +187,7 @@ function CatalogosSchematic() {
       viewBox="0 0 400 300"
       className="absolute inset-0 h-full w-full"
       role="img"
-      aria-label="Esquema de catálogos de revendedores: el comercio genera tres subdominios propios y el alta del dominio se hace vía la API de Vercel."
+      aria-label="Esquema de catálogos de revendedores: el comercio genera tres catálogos propios y el alta de cada uno se hace de forma automática."
     >
       {/* comercio hacia los tres subdominios (ruteo ortogonal) */}
       <SchLine d="M200 78 L200 112 L84 112 L84 141" />
@@ -205,7 +205,7 @@ function CatalogosSchematic() {
       <SchNode x={84} y={152} w={64} h={22} label="REV-A" />
       <SchNode x={200} y={152} w={64} h={22} label="REV-B" />
       <SchNode x={316} y={152} w={64} h={22} label="REV-C" />
-      <SchNode x={200} y={248} w={92} h={26} label="VERCEL API" />
+      <SchNode x={200} y={248} w={104} h={26} label="AUTOMÁTICO" />
       <SchNode x={200} y={64} w={84} h={28} label="COMERCIO" accent />
       <circle cx={232} cy={64} r={2.5} fill={SCH.amber} className="led-b" />
     </svg>
@@ -262,7 +262,7 @@ function AndroidSchematic() {
       viewBox="0 0 400 300"
       className="absolute inset-0 h-full w-full"
       role="img"
-      aria-label="Esquema de la app admin Android: el teléfono escanea códigos de barras con la cámara y se conecta con las notificaciones push y el POS."
+      aria-label="Esquema de la app del celular: el teléfono escanea códigos de barras con la cámara y se conecta con los avisos de pedidos y la caja."
     >
       {/* contorno del teléfono, aristas vivas */}
       <rect
@@ -317,7 +317,7 @@ function AndroidSchematic() {
         fill={SCH.amber}
         style={{ fontFamily: "var(--font-mono)", letterSpacing: "0.08em" }}
       >
-        APP ADMIN
+        LA APP
       </text>
       {/* flechas hacia PUSH y POS */}
       <SchLine d="M188 100 L282 100" />
@@ -326,8 +326,8 @@ function AndroidSchematic() {
       <SchArrow x={284} y={204} />
       {/* la señal: el escaneo alimenta directo al POS */}
       <SignalPath d="M174 152 L232 152 L232 204 L284 204" />
-      <SchNode x={312} y={100} w={60} h={24} label="PUSH" />
-      <SchNode x={312} y={204} w={56} h={24} label="POS" />
+      <SchNode x={312} y={100} w={64} h={24} label="AVISOS" />
+      <SchNode x={312} y={204} w={56} h={24} label="CAJA" />
     </svg>
   );
 }

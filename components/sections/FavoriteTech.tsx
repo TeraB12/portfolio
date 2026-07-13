@@ -56,16 +56,21 @@ export function FavoriteTech() {
               <MonoLabel tone="dim">{FAVORITE_TECH.panelLabel}</MonoLabel>
               <div aria-live="polite" className="mt-5 min-h-32">
                 <AnimatePresence mode="wait" initial={false}>
-                  <motion.p
+                  <motion.div
                     key={items[active].name}
                     initial={reduced ? false : { opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: reduced ? 0 : 0.2, ease: EASE }}
-                    className="max-w-[36ch] text-lg leading-relaxed text-ink"
                   >
-                    {items[active].why}
-                  </motion.p>
+                    <p className="max-w-[36ch] text-lg leading-relaxed text-ink">
+                      {items[active].why}
+                    </p>
+                    {/* sello de respaldo: la herramienta que lo hace posible */}
+                    <p className="mt-5">
+                      <MonoLabel>{`Con ${items[active].tech}`}</MonoLabel>
+                    </p>
+                  </motion.div>
                 </AnimatePresence>
               </div>
             </Reveal>
@@ -86,6 +91,9 @@ export function FavoriteTech() {
               <h3 className="font-display text-4xl font-extrabold uppercase leading-[1.05] tracking-[-0.02em] text-ink">
                 {item.name}
               </h3>
+              <p className="mt-2">
+                <MonoLabel>{`Con ${item.tech}`}</MonoLabel>
+              </p>
               <p className="mt-3 text-[15px] leading-relaxed text-dim">
                 {item.why}
               </p>

@@ -6,6 +6,7 @@ import { Stack } from "@/components/sections/Stack";
 import { Projects } from "@/components/sections/Projects";
 import { Timeline } from "@/components/sections/Timeline";
 import { Services } from "@/components/sections/Services";
+import { Process } from "@/components/sections/Process";
 import { FavoriteTech } from "@/components/sections/FavoriteTech";
 import { CaseStudies } from "@/components/sections/CaseStudies";
 import { Testimonials } from "@/components/sections/Testimonials";
@@ -23,6 +24,7 @@ export default function Home() {
       <Projects />
       <Timeline />
       <Services />
+      <Process />
       <FavoriteTech />
       <CaseStudies />
       <Testimonials />

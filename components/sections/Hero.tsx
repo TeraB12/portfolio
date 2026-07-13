@@ -196,7 +196,7 @@ export function Hero() {
       >
         <BootRise delay={base + 0.75} reduced={reduced}>
           <p className="text-base text-ink sm:text-lg md:text-xl">
-            <Keyword text={IDENTITY.heroTagline} word="opero" />
+            <Keyword text={IDENTITY.heroTagline} word="a medida" />
           </p>
         </BootRise>
 
