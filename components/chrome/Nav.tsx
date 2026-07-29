@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion, useMotionValueEvent, useScroll } from "motion/react";
-import { NAV } from "@/content/data";
+import { COMPANY, NAV } from "@/content/data";
 import { Led } from "@/components/ui/Led";
 import { scrollToHash, scrollToTop } from "@/lib/scroll";
 import { cn } from "@/lib/utils";
@@ -37,10 +37,15 @@ export function Nav() {
           e.preventDefault();
           scrollToTop();
         }}
-        className="font-display text-[15px] font-bold tracking-tight text-ink"
-        aria-label="Volver al inicio"
+        className="flex items-baseline gap-2.5"
+        aria-label={`${COMPANY.name}, volver al inicio`}
       >
-        Mateo Pereyra
+        <span className="font-display text-[15px] font-bold tracking-tight text-ink">
+          {COMPANY.name}
+        </span>
+        <span className="hidden font-mono text-[10px] uppercase tracking-[0.18em] text-faint sm:inline">
+          {COMPANY.descriptor}
+        </span>
       </a>
 
       <nav className="flex items-center gap-7" aria-label="Principal">

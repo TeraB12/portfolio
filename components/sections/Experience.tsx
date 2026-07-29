@@ -131,7 +131,7 @@ export function Experience() {
   const baseId = useId();
 
   return (
-    <Section id="experiencia">
+    <Section id="trayectoria">
       <SectionTitle title={EXPERIENCE.title} />
 
       <motion.div

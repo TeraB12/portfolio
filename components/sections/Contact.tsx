@@ -31,7 +31,7 @@ function GithubMark({
   );
 }
 
-import { CONTACT, IDENTITY } from "@/content/data";
+import { CONTACT, COMPANY } from "@/content/data";
 import { usePulse } from "@/lib/pulse";
 import { buildWhatsAppUrl, isValidEmail } from "@/lib/wa";
 import { EASE } from "@/lib/motion";
@@ -49,20 +49,20 @@ type FieldErrors = Partial<Record<RequiredKey, string>>;
 function DirectLinks() {
   const links = [
     {
-      href: `https://wa.me/${IDENTITY.whatsappNumber}`,
-      label: IDENTITY.phoneDisplay,
+      href: `https://wa.me/${COMPANY.whatsappNumber}`,
+      label: COMPANY.phoneDisplay,
       aria: "Abrir WhatsApp",
       Icon: MessageCircle,
     },
     {
-      href: `mailto:${IDENTITY.email}`,
-      label: IDENTITY.email,
+      href: `mailto:${COMPANY.email}`,
+      label: COMPANY.email,
       aria: "Escribir un email",
       Icon: Mail,
     },
     {
-      href: IDENTITY.github,
-      label: IDENTITY.github.replace(/^https?:\/\//, ""),
+      href: COMPANY.github,
+      label: COMPANY.github.replace(/^https?:\/\//, ""),
       aria: "Ver GitHub",
       Icon: GithubMark,
     },

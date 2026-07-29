@@ -2,21 +2,28 @@
 
 /**
  * PULSO · Sección Proyectos (id "proyectos").
- * Paneles caso-estudio apilados con pin GSAP (sticky-stack) en lg+ sin
- * reduced-motion. Cada panel: texto a la izquierda, esquema técnico SVG
- * honesto a la derecha en marco de instrumento. En mobile: apilado normal,
- * esquema arriba. Única sección (junto a Timeline) autorizada a usar GSAP.
+ *
+ * Carrusel horizontal de tarjetas deslizables: cada tarjeta muestra la CAPTURA
+ * REAL de la portada del sistema (public/previews, recortadas a 16/10). Si un
+ * proyecto no tiene captura (`shot: null`, porque no es público) la tarjeta cae
+ * al esquema técnico honesto de ese sistema, que se conserva de la versión
+ * anterior de la sección.
+ *
+ * Interacción: scroll-snap nativo (táctil, trackpad y teclado salen gratis) +
+ * arrastre con el mouse + flechas prev/next. El índice activo lo resuelve un
+ * IntersectionObserver sobre las tarjetas, no un listener de scroll.
+ *
+ * Ya NO usa GSAP: el apilado con pin quedó reemplazado por el carrusel.
  */
 
-import { useEffect, useRef } from "react";
-import { motion, useReducedMotion, type Variants } from "motion/react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { ArrowUpRight } from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import Image from "next/image";
+import { motion, useReducedMotion } from "motion/react";
+import { ArrowLeft, ArrowRight, ArrowUpRight } from "lucide-react";
 
 import { PROJECTS, PROJECT_ARCHIVE } from "@/content/data";
 import { cn } from "@/lib/utils";
-import { EASE, VIEWPORT_ONCE } from "@/lib/motion";
+import { EASE } from "@/lib/motion";
 import { Section } from "@/components/ui/Section";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import { Reveal } from "@/components/ui/Reveal";
@@ -25,7 +32,7 @@ import { ButtonLink } from "@/components/ui/Button";
 type ProjectItem = (typeof PROJECTS)["items"][number];
 
 /* ============================================================
-   Vocabulario visual de los esquemas (ver spec de la sección)
+   Vocabulario visual de los esquemas (fallback sin captura)
    ============================================================ */
 const SCH = {
   line: "rgba(233,230,221,0.15)",
@@ -147,10 +154,11 @@ function SignalPath({ d }: { d: string }) {
 }
 
 /* ============================================================
-   Esquemas por proyecto (diagramas reales del sistema, no mockups)
+   Esquemas por proyecto (diagramas reales del sistema, no mockups).
+   Solo se usan cuando el proyecto no tiene captura pública.
    ============================================================ */
 
-function TerabSchematic() {
+function PlataformaSchematic() {
   return (
     <svg
       viewBox="0 0 400 300"
@@ -158,7 +166,6 @@ function TerabSchematic() {
       role="img"
       aria-label="Esquema de la plataforma: un centro que conecta el panel, las tiendas, la caja, el servidor, los datos, la app del celular y la inteligencia artificial."
     >
-      {/* conexiones núcleo, satélites */}
       <SchLine d="M200 158 L84 72" />
       <SchLine d="M200 158 L200 52" />
       <SchLine d="M200 158 L316 72" />
@@ -166,7 +173,6 @@ function TerabSchematic() {
       <SchLine d="M200 158 L344 158" />
       <SchLine d="M200 158 L100 248" />
       <SchLine d="M200 158 L300 248" />
-      {/* la señal: una venta en el POS atraviesa el núcleo y aterriza en la DB */}
       <SignalPath d="M316 72 L200 158 L100 248" />
       <SchNode x={84} y={72} w={56} h={22} label="PANEL" />
       <SchNode x={200} y={52} w={64} h={22} label="TIENDAS" />
@@ -187,26 +193,23 @@ function CatalogosSchematic() {
       viewBox="0 0 400 300"
       className="absolute inset-0 h-full w-full"
       role="img"
-      aria-label="Esquema de catálogos de revendedores: el comercio genera tres catálogos propios y el alta de cada uno se hace de forma automática."
+      aria-label="Esquema de catálogos de revendedores: la empresa genera tres catálogos propios y el alta de cada uno se hace de forma automática."
     >
-      {/* comercio hacia los tres subdominios (ruteo ortogonal) */}
       <SchLine d="M200 78 L200 112 L84 112 L84 141" />
       <SchLine d="M200 78 L200 141" />
       <SchLine d="M200 78 L200 112 L316 112 L316 141" />
-      {/* subdominios hacia el bus y bajada al alta vía Vercel API */}
       <SchLine d="M84 163 L84 205" />
       <SchLine d="M200 163 L200 205" />
       <SchLine d="M316 163 L316 205" />
       <SchLine d="M84 205 L316 205" />
       <SchLine d="M200 205 L200 233" />
       <SchArrow x={200} y={233} dir="down" />
-      {/* la señal: el alta de un subdominio baja del comercio a la API */}
       <SignalPath d="M200 78 L200 233" />
       <SchNode x={84} y={152} w={64} h={22} label="REV-A" />
       <SchNode x={200} y={152} w={64} h={22} label="REV-B" />
       <SchNode x={316} y={152} w={64} h={22} label="REV-C" />
       <SchNode x={200} y={248} w={104} h={26} label="AUTOMÁTICO" />
-      <SchNode x={200} y={64} w={84} h={28} label="COMERCIO" accent />
+      <SchNode x={200} y={64} w={84} h={28} label="EMPRESA" accent />
       <circle cx={232} cy={64} r={2.5} fill={SCH.amber} className="led-b" />
     </svg>
   );
@@ -220,16 +223,13 @@ function AsistenteSchematic() {
       role="img"
       aria-label="Esquema del asistente de tienda: el cliente habla con el chat de inteligencia artificial, que consulta el catálogo real y deriva la venta a WhatsApp."
     >
-      {/* cadena horizontal con flechas */}
       <SchLine d="M82 150 L113 150" />
       <SchArrow x={113} y={150} />
       <SchLine d="M175 150 L203 150" />
       <SchArrow x={203} y={150} />
       <SchLine d="M297 150 L316 150" />
       <SchArrow x={316} y={150} />
-      {/* retorno: el catálogo responde al chat con stock del momento */}
       <SchLine d="M250 162 C250 212 144 212 144 162" dashed />
-      {/* la señal: chat, catálogo real, WhatsApp */}
       <SignalPath d="M144 150 L352 150" />
       <SchNode x={52} y={150} w={60} h={24} label="CLIENTE" />
       <SchNode x={250} y={150} w={94} h={24} label="CATÁLOGO REAL" />
@@ -264,7 +264,6 @@ function AndroidSchematic() {
       role="img"
       aria-label="Esquema de la app del celular: el teléfono escanea códigos de barras con la cámara y se conecta con los avisos de pedidos y la caja."
     >
-      {/* contorno del teléfono, aristas vivas */}
       <rect
         x={78}
         y={52}
@@ -286,7 +285,6 @@ function AndroidSchematic() {
         strokeWidth={1}
         vectorEffect="non-scaling-stroke"
       />
-      {/* código de barras en pantalla */}
       {BARCODE_BARS.map(([bx, bw]) => (
         <rect
           key={bx}
@@ -297,7 +295,6 @@ function AndroidSchematic() {
           fill="rgba(233,230,221,0.22)"
         />
       ))}
-      {/* línea de escaneo ámbar, late con el reloj global */}
       <line
         x1={92}
         y1={152}
@@ -319,12 +316,10 @@ function AndroidSchematic() {
       >
         LA APP
       </text>
-      {/* flechas hacia PUSH y POS */}
       <SchLine d="M188 100 L282 100" />
       <SchArrow x={282} y={100} />
       <SchLine d="M188 204 L284 204" />
       <SchArrow x={284} y={204} />
-      {/* la señal: el escaneo alimenta directo al POS */}
       <SignalPath d="M174 152 L232 152 L232 204 L284 204" />
       <SchNode x={312} y={100} w={64} h={24} label="AVISOS" />
       <SchNode x={312} y={204} w={56} h={24} label="CAJA" />
@@ -340,16 +335,12 @@ function MeliSchematic() {
       role="img"
       aria-label="Esquema del sistema Meli: varias cuentas de Mercado Libre convergen en un núcleo que consolida ventas y estadísticas por empresa."
     >
-      {/* tres cuentas de ML convergen en el sistema */}
       <SchLine d="M84 75 L200 143" />
       <SchLine d="M200 67 L200 143" />
       <SchLine d="M316 75 L200 143" />
-      {/* el sistema reparte hacia ventas y estadísticas */}
       <SchLine d="M200 173 L110 237" />
       <SchLine d="M200 173 L290 237" />
-      {/* multi-empresa: el núcleo cuelga de las empresas que conviven */}
       <SchLine d="M246 158 L344 158" dashed />
-      {/* la señal: una venta de la cuenta A atraviesa el sistema y aterriza en ventas */}
       <SignalPath d="M84 75 L200 158 L110 237" />
       <SchNode x={84} y={64} w={56} h={22} label="ML A" />
       <SchNode x={200} y={56} w={56} h={22} label="ML B" />
@@ -365,228 +356,324 @@ function MeliSchematic() {
 
 function Schematic({ id }: { id: ProjectItem["id"] }) {
   switch (id) {
-    case "terab":
-      return <TerabSchematic />;
     case "meli":
       return <MeliSchematic />;
-    case "catalogos":
-      return <CatalogosSchematic />;
     case "asistente":
       return <AsistenteSchematic />;
     case "android":
       return <AndroidSchematic />;
+    case "catalogos":
+      return <CatalogosSchematic />;
+    default:
+      return <PlataformaSchematic />;
   }
 }
 
 /* ============================================================
-   Marco de instrumento: hairline, ticks de esquina, anillo de specs
+   Ticks de instrumento en las esquinas del visor
    ============================================================ */
-function InstrumentFrame({
-  specs,
-  children,
-}: {
-  specs: readonly string[];
-  children: React.ReactNode;
-}) {
+function CornerTicks() {
   return (
-    <div className="relative aspect-[4/3] w-full border border-hairline bg-surface/50">
-      <span
-        aria-hidden
-        className="absolute left-0 top-0 h-3 w-3 border-l border-t border-pulse/50"
-      />
-      <span
-        aria-hidden
-        className="absolute right-0 top-0 h-3 w-3 border-r border-t border-pulse/50"
-      />
-      <span
-        aria-hidden
-        className="absolute bottom-0 left-0 h-3 w-3 border-b border-l border-pulse/50"
-      />
-      <span
-        aria-hidden
-        className="absolute bottom-0 right-0 h-3 w-3 border-b border-r border-pulse/50"
-      />
-      <div className="pointer-events-none absolute inset-x-0 top-0 z-10 flex flex-wrap gap-x-4 gap-y-1 border-b border-hairline px-4 py-2.5">
+    <div aria-hidden className="pointer-events-none absolute inset-0 z-10">
+      <span className="absolute left-0 top-0 h-3 w-3 border-l border-t border-pulse/50" />
+      <span className="absolute right-0 top-0 h-3 w-3 border-r border-t border-pulse/50" />
+      <span className="absolute bottom-0 left-0 h-3 w-3 border-b border-l border-pulse/50" />
+      <span className="absolute bottom-0 right-0 h-3 w-3 border-b border-r border-pulse/50" />
+    </div>
+  );
+}
+
+/* ============================================================
+   Tarjeta del carrusel: visor 16/10 + anillo de specs + ficha
+   ============================================================ */
+function ProjectCard({ item, index }: { item: ProjectItem; index: number }) {
+  // `PROJECTS.items` es `as const`, así que cada tarjeta es un tipo distinto y
+  // preguntar por `item.shot` dentro del JSX estrecha la unión a `never`.
+  // Sacamos los valores acá, ensanchados, y el JSX no tiene que narrowear nada.
+  const shot: string | null = item.shot;
+  const shotAlt: string | null = item.shotAlt;
+  const url: string | null = item.url;
+  const urlLabel: string | null = item.urlLabel;
+  const specs: readonly string[] = item.specs;
+  const bullets: readonly string[] = item.bullets;
+
+  return (
+    <article
+      data-card
+      data-index={index}
+      className={cn(
+        "group relative flex w-[86vw] max-w-[880px] flex-none snap-start flex-col",
+        "border border-hairline bg-surface/40 transition-colors duration-500",
+        "hover:border-pulse/30 md:w-[72vw]",
+      )}
+    >
+      {/* visor: la captura real de la portada, o el esquema del sistema */}
+      <div className="relative aspect-[16/10] w-full overflow-hidden border-b border-hairline bg-bg">
+        {shot ? (
+          <Image
+            src={shot}
+            alt={shotAlt ?? item.name}
+            width={1440}
+            height={900}
+            // ya vienen recortadas y en WebP: no hace falta reoptimizarlas
+            unoptimized
+            sizes="(min-width: 768px) 72vw, 86vw"
+            className={cn(
+              "h-full w-full object-cover object-top",
+              // la captura vive apagada dentro del instrumento y se enciende al hover
+              "brightness-[0.82] saturate-[0.9] transition-all duration-700",
+              "group-hover:brightness-100 group-hover:saturate-100",
+            )}
+          />
+        ) : (
+          <Schematic id={item.id} />
+        )}
+        <CornerTicks />
+      </div>
+
+      {/* anillo de specs */}
+      <div className="flex flex-wrap gap-x-4 gap-y-1 border-b border-hairline px-5 py-2.5 md:px-7">
         {specs.map((s) => (
           <span key={s} className="mono-label text-dim">
             {s}
           </span>
         ))}
       </div>
-      {children}
-    </div>
-  );
-}
 
-/* ============================================================
-   Callouts: se encienden en secuencia al entrar al viewport
-   ============================================================ */
-const calloutList: Variants = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.15 } },
-};
+      {/* ficha */}
+      <div className="flex flex-1 flex-col px-5 py-7 md:px-7 md:py-8">
+        <h3 className="font-display text-[clamp(1.7rem,3vw,2.6rem)] font-extrabold leading-[1] tracking-[-0.02em] text-ink">
+          {item.name}
+        </h3>
+        <p className="mt-2.5 text-sm font-medium text-pulse">{item.kind}</p>
+        <p className="mt-4 max-w-[62ch] text-[15px] leading-relaxed text-dim">
+          {item.description}
+        </p>
 
-const calloutItem: Variants = {
-  hidden: { opacity: 0.25, x: -8 },
-  visible: { opacity: 1, x: 0, transition: { duration: 0.6, ease: EASE } },
-};
-
-/* ============================================================
-   Panel caso-estudio
-   ============================================================ */
-function ProjectPanel({ item, index }: { item: ProjectItem; index: number }) {
-  const reduced = useReducedMotion();
-
-  return (
-    <article
-      data-panel
-      style={{ zIndex: index + 1 }}
-      className="relative flex items-center border-t border-hairline bg-bg py-16 lg:min-h-[100dvh] lg:py-20"
-    >
-      <div className="mx-auto w-full max-w-[1400px] px-6 md:px-12 lg:pl-28 lg:pr-20">
-        <div className="grid items-center gap-12 lg:grid-cols-2">
-          {/* texto: abajo en mobile, izquierda en desktop */}
-          <div className="order-2 lg:order-1">
-            <h3 className="font-display text-[clamp(2.6rem,4.5vw,4rem)] font-extrabold leading-[0.95] tracking-[-0.02em] text-ink">
-              {item.name}
-            </h3>
-            <p className="mt-3 text-sm font-medium text-pulse">{item.kind}</p>
-            <p className="mt-5 max-w-[50ch] leading-relaxed text-dim">
-              {item.description}
-            </p>
-
-            <motion.ul
-              className="mt-10 flex flex-col gap-5"
-              variants={calloutList}
-              initial={reduced ? false : "hidden"}
-              whileInView="visible"
-              viewport={VIEWPORT_ONCE}
+        <ul className="mt-6 flex flex-col gap-2.5">
+          {bullets.map((b) => (
+            <li
+              key={b}
+              className="border-l border-hairline pl-4 text-[14px] leading-relaxed text-dim transition-colors duration-300 hover:border-pulse/50"
             >
-              {item.callouts.map((c) => (
-                <motion.li
-                  key={c.t}
-                  variants={calloutItem}
-                  className="border-l border-hairline pl-5 transition-colors duration-300 hover:border-pulse/50"
-                >
-                  <p className="font-medium text-ink">{c.t}</p>
-                  <p className="mt-1 text-[15px] leading-relaxed text-dim">
-                    {c.d}
-                  </p>
-                </motion.li>
-              ))}
-            </motion.ul>
+              {b}
+            </li>
+          ))}
+        </ul>
 
-            {item.url && (
-              <div className="mt-9">
-                <ButtonLink
-                  variant="ghost"
-                  href={item.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Ver en vivo
-                  <ArrowUpRight
-                    aria-hidden
-                    className="ml-2 h-4 w-4"
-                    strokeWidth={1.5}
-                  />
-                </ButtonLink>
-              </div>
-            )}
+        {url && (
+          <div className="mt-7">
+            <ButtonLink
+              variant="ghost"
+              href={url}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {urlLabel ?? "Ver en vivo"}
+              <ArrowUpRight
+                aria-hidden
+                className="ml-2 h-4 w-4"
+                strokeWidth={1.5}
+              />
+            </ButtonLink>
           </div>
-
-          {/* esquema: arriba en mobile, derecha en desktop */}
-          <div className="order-1 lg:order-2">
-            <InstrumentFrame specs={item.specsRing}>
-              <Schematic id={item.id} />
-            </InstrumentFrame>
-          </div>
-        </div>
+        )}
       </div>
     </article>
   );
 }
 
 /* ============================================================
-   Sección: sticky-stack con pin GSAP (solo lg+ y sin reduced-motion)
+   Carrusel: scroll-snap nativo + arrastre con mouse + flechas
    ============================================================ */
-export function Projects() {
-  const wrapRef = useRef<HTMLDivElement>(null);
+const TOTAL = PROJECTS.items.length;
 
+function Carousel() {
+  const trackRef = useRef<HTMLDivElement>(null);
+  const [active, setActive] = useState(0);
+  const reduced = useReducedMotion();
+
+  /* índice activo: IntersectionObserver, no listener de scroll */
   useEffect(() => {
-    if (!wrapRef.current) return;
-    gsap.registerPlugin(ScrollTrigger);
+    const track = trackRef.current;
+    if (!track) return;
+    const cards = track.querySelectorAll<HTMLElement>("[data-card]");
 
-    const mm = gsap.matchMedia();
-    const ctx = gsap.context(() => {
-      mm.add(
-        "(min-width: 1024px) and (prefers-reduced-motion: no-preference)",
-        () => {
-          const panels = gsap.utils.toArray<HTMLElement>(
-            "[data-panel]",
-            wrapRef.current,
-          );
-          if (panels.length < 2) return;
-          const last = panels[panels.length - 1];
+    const io = new IntersectionObserver(
+      (entries) => {
+        // la tarjeta más visible manda
+        let best: { i: number; ratio: number } | null = null;
+        for (const e of entries) {
+          if (!e.isIntersecting) continue;
+          const i = Number((e.target as HTMLElement).dataset.index);
+          if (!best || e.intersectionRatio > best.ratio) {
+            best = { i, ratio: e.intersectionRatio };
+          }
+        }
+        if (best) setActive(best.i);
+      },
+      { root: track, threshold: [0.5, 0.75, 1] },
+    );
 
-          panels.forEach((panel, i) => {
-            if (panel === last) return;
-            ScrollTrigger.create({
-              trigger: panel,
-              // paneles más altos que el viewport se pinean desde su fondo
-              // para que el CTA y los callouts inferiores lleguen a verse
-              start: () =>
-                panel.offsetHeight <= window.innerHeight
-                  ? "top top"
-                  : "bottom bottom",
-              endTrigger: last,
-              end: "top top",
-              pin: true,
-              pinSpacing: false,
-            });
-            gsap.to(panel, {
-              scale: 0.94,
-              opacity: 0.5,
-              ease: "none",
-              scrollTrigger: {
-                trigger: panels[i + 1],
-                start: "top bottom",
-                end: "top top",
-                scrub: true,
-              },
-            });
-          });
-        },
-      );
-    }, wrapRef);
-
-    // Experiencia (más arriba) expande filas y cambia la altura del documento:
-    // re-medir los pins con un refresh debounced.
-    let t: number | undefined;
-    const ro = new ResizeObserver(() => {
-      window.clearTimeout(t);
-      t = window.setTimeout(() => ScrollTrigger.refresh(), 150);
-    });
-    ro.observe(document.body);
-
-    return () => {
-      window.clearTimeout(t);
-      ro.disconnect();
-      mm.revert();
-      ctx.revert();
-    };
+    cards.forEach((c) => io.observe(c));
+    return () => io.disconnect();
   }, []);
 
+  /* mover una tarjeta (paso real medido del DOM, no un número mágico) */
+  const step = useCallback(
+    (dir: 1 | -1) => {
+      const track = trackRef.current;
+      if (!track) return;
+      const first = track.querySelector<HTMLElement>("[data-card]");
+      const second = track.querySelector<HTMLElement>(
+        "[data-card]:nth-of-type(2)",
+      );
+      const delta =
+        first && second
+          ? second.offsetLeft - first.offsetLeft
+          : (first?.offsetWidth ?? track.clientWidth);
+      track.scrollBy({
+        left: dir * delta,
+        behavior: reduced ? "auto" : "smooth",
+      });
+    },
+    [reduced],
+  );
+
+  /* arrastre con el mouse (el táctil ya funciona nativo, no lo tocamos) */
+  const drag = useRef({ active: false, startX: 0, startScroll: 0, moved: 0 });
+
+  const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (e.pointerType !== "mouse") return;
+    const track = trackRef.current;
+    if (!track) return;
+    drag.current = {
+      active: true,
+      startX: e.clientX,
+      startScroll: track.scrollLeft,
+      moved: 0,
+    };
+  };
+
+  const onPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    const track = trackRef.current;
+    if (!drag.current.active || !track) return;
+    const dx = e.clientX - drag.current.startX;
+    drag.current.moved = Math.abs(dx);
+    // el arrastre necesita desactivar el snap o el navegador pelea con nosotros
+    if (drag.current.moved > 4) track.style.scrollSnapType = "none";
+    track.scrollLeft = drag.current.startScroll - dx;
+  };
+
+  const endDrag = () => {
+    const track = trackRef.current;
+    if (!drag.current.active || !track) return;
+    drag.current.active = false;
+    // devolver el snap deja que el navegador acomode la tarjeta más cercana
+    track.style.scrollSnapType = "";
+  };
+
+  /* un click que en realidad fue un arrastre no debe abrir el link */
+  const onClickCapture = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (drag.current.moved > 6) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    drag.current.moved = 0;
+  };
+
+  return (
+    <div className="mt-12 md:mt-16">
+      {/* barra de instrumento: índice, progreso y flechas */}
+      <div className="mx-auto mb-6 flex max-w-[1400px] items-center gap-6 px-6 md:px-12 lg:pl-28 lg:pr-20">
+        <span className="mono-label shrink-0 text-dim tabular-nums">
+          {String(active + 1).padStart(2, "0")} / {String(TOTAL).padStart(2, "0")}
+        </span>
+
+        <div
+          aria-hidden
+          className="relative h-px flex-1 bg-[var(--hairline)]"
+        >
+          <motion.span
+            className="absolute inset-y-0 left-0 bg-pulse"
+            animate={{ width: `${((active + 1) / TOTAL) * 100}%` }}
+            transition={reduced ? { duration: 0 } : { duration: 0.5, ease: EASE }}
+          />
+        </div>
+
+        <span className="mono-label hidden shrink-0 text-faint sm:inline">
+          {PROJECTS.hint}
+        </span>
+
+        <div className="flex shrink-0 items-center gap-2">
+          <button
+            type="button"
+            onClick={() => step(-1)}
+            disabled={active === 0}
+            aria-label="Proyecto anterior"
+            className="flex h-9 w-9 items-center justify-center border border-hairline text-dim transition-colors duration-300 hover:border-pulse/50 hover:text-pulse disabled:pointer-events-none disabled:opacity-30"
+          >
+            <ArrowLeft aria-hidden className="h-4 w-4" strokeWidth={1.5} />
+          </button>
+          <button
+            type="button"
+            onClick={() => step(1)}
+            disabled={active === TOTAL - 1}
+            aria-label="Proyecto siguiente"
+            className="flex h-9 w-9 items-center justify-center border border-hairline text-dim transition-colors duration-300 hover:border-pulse/50 hover:text-pulse disabled:pointer-events-none disabled:opacity-30"
+          >
+            <ArrowRight aria-hidden className="h-4 w-4" strokeWidth={1.5} />
+          </button>
+        </div>
+      </div>
+
+      {/* el riel: full-bleed, snap por tarjeta.
+          data-lenis-prevent evita que el scroll suave global se coma el gesto. */}
+      <div
+        ref={trackRef}
+        data-lenis-prevent
+        role="region"
+        tabIndex={0}
+        aria-label="Carrusel de proyectos. Usá las flechas del teclado para recorrerlo."
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={endDrag}
+        onPointerLeave={endDrag}
+        onPointerCancel={endDrag}
+        onClickCapture={onClickCapture}
+        className={cn(
+          "flex snap-x snap-mandatory gap-6 overflow-x-auto overscroll-x-contain pb-4",
+          "px-6 scroll-px-6 md:px-12 md:scroll-px-12 lg:pl-28 lg:scroll-pl-28 lg:pr-20",
+          "[scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
+          "cursor-grab active:cursor-grabbing",
+          "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-pulse",
+        )}
+      >
+        {PROJECTS.items.map((item, i) => (
+          <ProjectCard key={item.id} item={item} index={i} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ============================================================
+   Sección
+   ============================================================ */
+export function Projects() {
   return (
     <Section id="proyectos" bleed>
       <div className="mx-auto max-w-[1400px] px-6 md:px-12 lg:pl-28 lg:pr-20">
         <SectionTitle eyebrow={PROJECTS.eyebrow} title={PROJECTS.title} />
+        <Reveal>
+          <p className="mt-6 max-w-[58ch] text-[17px] leading-relaxed text-dim">
+            {PROJECTS.intro}
+          </p>
+        </Reveal>
       </div>
-      <div ref={wrapRef}>
-        {PROJECTS.items.map((item, i) => (
-          <ProjectPanel key={item.id} item={item} index={i} />
-        ))}
-      </div>
+
+      <Carousel />
+
       <ProjectArchive />
     </Section>
   );
@@ -594,8 +681,7 @@ export function Projects() {
 
 /* ============================================================
    Archivo: el recorrido antes y alrededor de la plataforma.
-   Filas editoriales SIN links al código (decisión de Mateo);
-   solo linkea la demo viva cuando existe.
+   Filas editoriales SIN links al código; solo linkea la demo viva.
    ============================================================ */
 function ArchiveRowContent({
   p,

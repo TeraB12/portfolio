@@ -3,7 +3,7 @@ import localFont from "next/font/local";
 import { IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 
-import { SEO, IDENTITY } from "@/content/data";
+import { SEO, COMPANY } from "@/content/data";
 import { PulseProvider } from "@/lib/pulse";
 import { LenisProvider } from "@/components/chrome/LenisProvider";
 import { Preloader } from "@/components/chrome/Preloader";
@@ -44,25 +44,27 @@ export const metadata: Metadata = {
   title: SEO.title,
   description: SEO.description,
   keywords: [
-    "sistemas a medida",
-    "software a medida Córdoba",
-    "sistema para comercio",
-    "sistema de gestión comercial",
+    "software a medida",
+    "empresa de desarrollo de software",
+    "desarrollo de software Córdoba",
+    "sistema de gestión a medida",
+    "automatización de procesos",
+    "automatización con IA",
+    "sistema para empresas",
     "punto de venta",
     "tienda online",
     "facturación AFIP",
     "Mercado Pago",
     "Mercado Libre",
-    "desarrollador de software",
     "Córdoba",
     "Argentina",
   ],
-  authors: [{ name: IDENTITY.name }],
+  authors: [{ name: COMPANY.name }],
   openGraph: {
     title: SEO.title,
     description: SEO.description,
     url: SEO.url,
-    siteName: IDENTITY.name,
+    siteName: COMPANY.name,
     locale: SEO.locale,
     type: "website",
   },

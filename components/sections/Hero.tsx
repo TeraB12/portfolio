@@ -14,7 +14,7 @@
 
 import { useMemo, type MouseEvent, type ReactNode } from "react";
 import { motion, useReducedMotion } from "motion/react";
-import { HERO, IDENTITY, NAV } from "@/content/data";
+import { HERO, COMPANY, NAV } from "@/content/data";
 import { bootDelaySeconds } from "@/lib/boot";
 import { EASE } from "@/lib/motion";
 import { PULSE_TIMING } from "@/lib/pulse";
@@ -158,25 +158,25 @@ export function Hero() {
           <Led />
           <span className="text-pulse">{NAV.statusLabel}</span>
         </p>
-        <p className="text-dim">{IDENTITY.locationShort}</p>
+        <p className="text-dim">{COMPANY.locationShort}</p>
         <UptimeReadout />
       </motion.div>
 
-      {/* nombre monumental, por encima del canvas */}
+      {/* marca monumental, por encima del canvas */}
       <div className={`relative z-10 pt-[7vh] md:pt-[9vh] ${LEFT_RAIL}`}>
         <h1
-          aria-label={`${IDENTITY.firstName} ${IDENTITY.lastName}`}
+          aria-label={`${COMPANY.name}, ${COMPANY.descriptor}`}
           className="font-display text-[clamp(4.5rem,11vw,9.5rem)] font-extrabold uppercase leading-[0.9] tracking-[-0.03em] text-ink max-[374px]:text-[3.5rem]"
         >
           <BootLetters
-            text={IDENTITY.firstName}
+            text={COMPANY.wordmarkTop}
             from={0}
             base={base}
             reduced={reduced}
           />
           <BootLetters
-            text={IDENTITY.lastName}
-            from={IDENTITY.firstName.length}
+            text={COMPANY.wordmarkBottom}
+            from={COMPANY.wordmarkTop.length}
             base={base}
             reduced={reduced}
           />
@@ -196,13 +196,13 @@ export function Hero() {
       >
         <BootRise delay={base + 0.75} reduced={reduced}>
           <p className="text-base text-ink sm:text-lg md:text-xl">
-            <Keyword text={IDENTITY.heroTagline} word="a medida" />
+            <Keyword text={COMPANY.heroTagline} word="a medida" />
           </p>
         </BootRise>
 
         <BootRise delay={base + 0.9} reduced={reduced}>
           <p className="mt-3 max-w-[52ch] text-[15px] leading-relaxed text-dim md:text-[17px]">
-            {IDENTITY.heroSubline}
+            {COMPANY.heroSubline}
           </p>
         </BootRise>
 

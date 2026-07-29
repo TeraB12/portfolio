@@ -3,7 +3,7 @@
  * Sin backend: el formulario arma un mensaje estructurado y abre wa.me.
  */
 
-import { IDENTITY } from "@/content/data";
+import { COMPANY } from "@/content/data";
 
 export type QuoteRequest = {
   name: string;
@@ -15,13 +15,13 @@ export type QuoteRequest = {
 
 export function buildQuoteMessage(q: QuoteRequest): string {
   const lines = [
-    `Hola Mateo, soy *${q.name.trim()}*.`,
-    "Te escribo desde tu portfolio para pedir un presupuesto.",
+    `Hola ${COMPANY.name}, soy *${q.name.trim()}*.`,
+    "Les escribo desde la web para pedir un presupuesto.",
     "",
-    `*Tipo de desarrollo:* ${q.devType}`,
+    `*Qué necesito:* ${q.devType}`,
     `*Email de contacto:* ${q.email.trim()}`,
     "",
-    "*Sobre mi comercio / proyecto:*",
+    "*Sobre mi empresa / proyecto:*",
     q.business.trim(),
   ];
   if (q.ideas && q.ideas.trim()) {
@@ -33,7 +33,7 @@ export function buildQuoteMessage(q: QuoteRequest): string {
 
 export function buildWhatsAppUrl(q: QuoteRequest): string {
   const text = encodeURIComponent(buildQuoteMessage(q));
-  return `https://wa.me/${IDENTITY.whatsappNumber}?text=${text}`;
+  return `https://wa.me/${COMPANY.whatsappNumber}?text=${text}`;
 }
 
 export function isValidEmail(email: string): boolean {

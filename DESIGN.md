@@ -1,14 +1,15 @@
-# PULSO — Sistema de diseño del portfolio de Mateo Valentin Pereyra
+# PULSO — Sistema de diseño del sitio de empresa
 
 > **Concepto:** el sitio no es un portfolio, es un organismo de software vivo. Todo el sitio
 > comparte un único reloj cardíaco global (un latido cada ~4.5s) que se propaga por una señal
 > continua: nace horizontal en el hero como electrocardiograma y baja como columna vertebral
 > (spine) por el margen izquierdo durante las 13 secciones. La telemetría es honesta: uptime
-> real de la sesión, hora real de Córdoba, datos reales de TeraB en producción.
-> **Mensaje en 5 segundos:** "este desarrollador no hace demos; opera sistemas que respiran."
+> real de la sesión, hora real de Córdoba, datos reales de la plataforma en producción.
+> **Mensaje en 5 segundos:** "esta empresa no hace demos; opera sistemas que respiran."
 
-Design Read: portfolio de desarrollador full-stack para conseguir clientes y trabajo, lenguaje
-experimental-premium (Awwwards), en español (Argentina, profesional).
+Design Read: sitio de PULSO, empresa de desarrollo de software a medida, para captar empresas
+como clientes; lenguaje experimental-premium (Awwwards), en español (Argentina, profesional).
+La voz es "nosotros"; Mateo Pereyra aparece como fundador y cara visible en La empresa.
 Dials: `DESIGN_VARIANCE: 8 / MOTION_INTENSITY: 7 / VISUAL_DENSITY: 3`.
 
 ---
@@ -95,7 +96,8 @@ Un solo reloj para TODO el sitio. Nada late por su cuenta.
 - Easing global: `[0.16, 1, 0.3, 1]`. Springs: `stiffness 100, damping 20`.
 - Animar SOLO `transform` y `opacity`. PROHIBIDO `window.addEventListener('scroll')`:
   usar `useScroll` de motion, ScrollTrigger de GSAP o IntersectionObserver.
-- GSAP SOLO en: Proyectos (pin de paneles) y Timeline (scrub del latido). Todo lo demás:
+- GSAP SOLO en: Timeline (scrub del latido). Proyectos dejó de usarlo cuando el apilado con
+  pin pasó a ser un carrusel de tarjetas con scroll-snap nativo. Todo lo demás:
   `motion/react` (import desde `"motion/react"`). Jamás mezclar GSAP y motion sobre el MISMO nodo.
 - Todo `useEffect` con animación limpia al desmontar (`ctx.revert()` en GSAP).
 - `useReducedMotion()` en cada componente animado: degradar a estático nítido.
@@ -115,35 +117,45 @@ Un solo reloj para TODO el sitio. Nada late por su cuenta.
 
 ## 8. Las 13 secciones (familia de layout + motion motivado)
 
-| # | Sección | Archivo | Layout (familia única) | Motion |
-|---|---|---|---|---|
-| 1 | Hero | `Hero.tsx` + `HeroSignal.tsx` | Editorial monumental asimétrico: nombre gigante arriba-izq, ECG horizontal al 62%, telemetría mono arriba-der | Boot: línea se dibuja → primer latido enciende el nombre letra por letra (rise+blur). Línea se curva hacia el cursor (spring, ±12px) |
-| 2 | Sobre mí | `About.tsx` | Split asimétrico 7/5, texto dominante; retrato/monograma duotono ámbar anclado a la spine con conector 1px | Párrafos revelados por línea con máscara; una única pasada de scanline sobre el retrato (una vez) |
-| 3 | Experiencia | `Experience.tsx` | Tabla tipográfica editorial full-width, filas con año en mono al margen, acordeón. SIN cards | Al expandir, la spine emite un pulso lateral hacia la fila (feedback) |
-| 4 | Skills | `Skills.tsx` | Constelación SVG de nodos agrupados (Frontend/Backend/Integraciones/Infra), conectados con líneas 1px. Peso tipográfico del label = dominio real (injerto PLOMO). SIN barras ni % | Nodos respiran con `--pulse`/`--pulse-b`; hover ilumina la cadena real de dependencias (Prisma enciende PostgreSQL y NestJS) |
-| 5 | Stack | `Stack.tsx` | Banda horizontal full-bleed tipo bahía de racks: módulos rectangulares, nombre mono, LED. Scroll-snap horizontal contenido en la franja | Boot sequence: LEDs encienden en secuencia al entrar; después laten con el reloj global en offsets |
-| 6 | Proyectos | `Projects.tsx` | Paneles caso-estudio apilados con pin GSAP; TeraB dominante: esquema SVG del sistema (módulos reales conectados) en marco de instrumento con ticks, anillo de specs mono alrededor (POS · AFIP · MP · ML · ANDROID · IA), callouts conectados por la señal | Pin + los callouts se encienden en secuencia según progreso del scroll (recorrido guiado) |
-| 7 | Timeline | `Timeline.tsx` | La línea pasa AL CENTRO: hitos alternados izq/der como eventos de log con timestamp mono; cada hito es un spike congelado | Scrub ScrollTrigger: el latido viaja por la línea y enciende cada hito al llegar |
-| 8 | Servicios | `Services.tsx` | Grid asimétrico 2×2 desigual (celda "Sistemas para comercios" dominante), bordes hairline, sin sombras | Hover: contenido sube 4px + tick mono de confirmación |
-| 9 | Tecnologías favoritas | `FavoriteTech.tsx` | Índice tipográfico gigante: palabras enormes en outline que se llenan de ámbar al hover; panel lateral fijo mono con el porqué honesto. Foco: fila activa 100%, resto 40% (injerto APERTURA) | Fill con clip-path al hover + crossfade del panel |
-| 10 | Casos de éxito | `CaseStudies.tsx` | Dossier documental: cabecera mono "EN PRODUCCIÓN · MYA IMPORTACIONES", 3 columnas de datos duros, cita del flujo real | Números cuentan desde 0 UNA vez al entrar, disparados por el latido |
-| 11 | Testimonios | `Testimonials.tsx` | Cita monumental única centrada (Cabinet 500 grande). Placeholder honesto "ZONA SIN RELEVAR" con achurado diagonal | Transición por blur + 12px de desplazamiento |
-| 12 | Contacto | `Contact.tsx` | **El cotizador**: título grande + form en 2 columnas (campos izq, contexto der), CTA "Enviar por WhatsApp". La señal se aplana detrás | El latido se acelera con cada campo completado (setRate); submit = golpe de matriz + abre wa.me |
-| 13 | Footer | `Footer.tsx` | Barra de estado full-width mono: © 2026, Córdoba AR, uptime de sesión, hora local, colofón de imprenta ("Compuesto en Cabinet Grotesk y Satoshi. Corriendo en Next.js. Córdoba, 2026."), link "volver arriba". La señal termina en un punto que late para siempre | El punto final late con el reloj global |
+El orden vende en este orden: primero la PRUEBA (proyectos funcionando), después qué vendemos
+y cómo trabajamos, y recién entonces quiénes somos. `app/page.tsx` y `WAYPOINTS` en
+`content/data.ts` DEBEN mantener este mismo orden, porque WAYPOINTS alimenta la spine.
 
-Familias usadas: editorial-monumental, split-asimétrico, tabla-editorial, constelación-SVG,
-banda-racks, paneles-pin, timeline-central, grid-asimétrico, índice-tipográfico, dossier,
+| # | Sección | id | Archivo | Layout (familia única) | Motion |
+|---|---|---|---|---|---|
+| 1 | Hero | `inicio` | `Hero.tsx` + `HeroSignal.tsx` | Editorial monumental asimétrico: lockup PULSO/SOFTWARE gigante arriba-izq, ECG horizontal al 62%, telemetría mono arriba-der | Boot: línea se dibuja → primer latido enciende la marca letra por letra (rise+blur). Línea se curva hacia el cursor (spring, ±12px) |
+| 2 | Proyectos | `proyectos` | `Projects.tsx` | **Carrusel de tarjetas deslizables** full-bleed: cada tarjeta es un instrumento con visor 16/10 arriba (CAPTURA REAL de la portada del sistema desde `public/previews`, o el esquema SVG honesto si el proyecto no es público), anillo de specs mono, ficha con titular, bajada, bullets y "Ver en vivo". Barra de instrumento arriba: índice `01 / 07`, progreso hairline, flechas | Scroll-snap nativo + arrastre con mouse + flechas. Índice activo por IntersectionObserver (root = riel), NO por listener de scroll. La captura vive apagada (brightness .82) y se enciende al hover |
+| 3 | Servicios | `servicios` | `Services.tsx` | Grid asimétrico 2×2 desigual (celda "Sistemas de gestión a medida" dominante), bordes hairline, sin sombras | Hover: contenido sube 4px + tick mono de confirmación |
+| 4 | Cómo trabajamos | `proceso` | `Process.tsx` | Los 4 pasos de la relación con el cliente, numerados en mono | Reveal escalonado |
+| 5 | Casos de éxito | `casos` | `CaseStudies.tsx` | Dossier documental: cabecera mono "FUNCIONANDO · MYA IMPORTACIONES", 3 columnas de datos duros, cita del flujo real | Números cuentan desde 0 UNA vez al entrar, disparados por el latido |
+| 6 | La empresa | `empresa` | `About.tsx` | Split asimétrico 7/5: izq quiénes somos + los 3 pilares (equipo certificado / IA / producción) en filas hairline; der el FUNDADOR como espécimen (retrato duotono ámbar anclado a la spine) con bio, cita y ficha | Párrafos revelados por línea con máscara; una única pasada de scanline sobre el retrato (una vez) |
+| 7 | Trayectoria | `trayectoria` | `Experience.tsx` | Tabla tipográfica editorial full-width, filas con año en mono al margen, acordeón. SIN cards | Al expandir, la spine emite un pulso lateral hacia la fila (feedback) |
+| 8 | Lo que dominamos | `skills` | `Skills.tsx` | Constelación SVG de nodos agrupados, conectados con líneas 1px. Peso tipográfico del label = dominio real. SIN barras ni % | Nodos respiran con `--pulse`/`--pulse-b`; hover ilumina la cadena real de dependencias |
+| 9 | Herramientas | `stack` | `Stack.tsx` | Banda horizontal full-bleed tipo bahía de racks: módulos rectangulares, nombre mono, LED. Scroll-snap horizontal contenido en la franja | Boot sequence: LEDs encienden en secuencia al entrar; después laten con el reloj global en offsets |
+| 10 | Por qué | `tecnologias` | `FavoriteTech.tsx` | Índice tipográfico gigante: palabras enormes en outline que se llenan de ámbar al hover; panel lateral fijo mono con el porqué honesto | Fill con clip-path al hover + crossfade del panel |
+| 11 | La historia | `historia` | `Timeline.tsx` | La línea pasa AL CENTRO: hitos alternados izq/der como eventos de log con timestamp mono | Scrub ScrollTrigger: el latido viaja por la línea y enciende cada hito al llegar |
+| 12 | Testimonios | `testimonios` | `Testimonials.tsx` | Cita monumental única centrada. Placeholder honesto "ZONA SIN RELEVAR" con achurado diagonal | Transición por blur + 12px de desplazamiento |
+| 13 | Contacto | `contacto` | `Contact.tsx` | **El cotizador**: título grande + form en 2 columnas (campos izq, contexto der), CTA "Enviar por WhatsApp" | El latido se acelera con cada campo completado (setRate); submit = golpe de matriz + abre wa.me |
+| — | Footer | — | `Footer.tsx` | Barra de estado full-width mono: © 2026 Pulso, uptime de sesión, hora local, link "volver arriba" | El punto final late con el reloj global |
+
+**Capturas de portada** (`public/previews/*.webp`): recortadas a 16/10 (1440x900) y convertidas a
+WebP. Se sirven con `unoptimized` en el `<Image>` porque ya vienen al tamaño exacto: no gastar
+cuota de Image Optimization de Vercel en reoptimizar. Para cambiar una, reemplazar el archivo
+con el mismo nombre. Para que una tarjeta vuelva al esquema SVG, poner `shot: null` en `PROJECTS`.
+
+Familias usadas: editorial-monumental, carrusel-instrumento, split-asimétrico, tabla-editorial,
+constelación-SVG, banda-racks, timeline-central, grid-asimétrico, índice-tipográfico, dossier,
 cita-monumental, form-2col, status-bar → 13 layouts, cero repetición.
 
 ## 9. Contacto: el cotizador (requisito del cliente)
 
-Form: nombre*, email*, tipo de desarrollo* (select: Sistema para comercio (POS + stock +
-facturación) / Tienda online / Web institucional / App o sistema a medida / Integración o
-automatización / Otro), "Contame de tu comercio o proyecto"* (textarea), "Ideas o contexto
-extra" (textarea opcional). Validación inline en español. Al enviar:
+Form: nombre*, email*, qué necesitás* (select: Sistema de gestión a medida / Automatización de
+procesos o IA / Tienda online / Web institucional / Integración con AFIP, Mercado Pago o Mercado
+Libre / App para celular / Otro), "Contanos de tu empresa o proyecto"* (textarea), "Ideas o
+contexto extra" (textarea opcional). Validación inline en español. Al enviar:
 
 ```
-https://wa.me/5493515946404?text=<encodeURIComponent(mensaje estructurado)>
+https://wa.me/5493512037813?text=<encodeURIComponent(mensaje estructurado)>
 ```
 
 Mensaje (armado en `lib/wa.ts`): saludo, nombre, email, tipo, descripción, ideas, cierre.

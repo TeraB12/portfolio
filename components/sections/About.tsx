@@ -1,12 +1,13 @@
 "use client";
 
 /**
- * PULSO · Sección 2: Sobre mí.
- * Split asimétrico 7/5 con texto dominante: párrafos revelados por máscara a la
- * izquierda; a la derecha el "retrato" tratado como espécimen de instrumento
- * (marco con ticks, monograma, una única pasada de scanline) y la ficha técnica.
- * El glow del monograma late con el reloj global vía CSS (clase led-b), acá no
- * hay ningún loop propio.
+ * PULSO · Sección La empresa (id "empresa").
+ * Split asimétrico 7/5 con texto dominante: a la izquierda quién es Pulso
+ * (párrafos revelados por máscara + los tres pilares de la empresa); a la
+ * derecha el fundador tratado como espécimen de instrumento (marco con ticks,
+ * una única pasada de scanline) con su bio, porque saber quién está atrás baja
+ * el miedo a contratar. El glow del retrato late con el reloj global vía CSS
+ * (clase led-b), acá no hay ningún loop propio.
  */
 
 import Image from "next/image";
@@ -16,7 +17,7 @@ import { Section } from "@/components/ui/Section";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import { Reveal } from "@/components/ui/Reveal";
 import { MonoLabel } from "@/components/ui/MonoLabel";
-import { ABOUT, IDENTITY } from "@/content/data";
+import { ABOUT, FOUNDER } from "@/content/data";
 
 /** contenedor de párrafos: stagger entre las máscaras */
 const paragraphsParent: Variants = {
@@ -57,7 +58,7 @@ function CornerTicks() {
   );
 }
 
-/** retrato como espécimen: marco 4/5, foto en duotono ámbar, scanline única y conector a la spine */
+/** retrato del fundador como espécimen: marco 4/5, duotono ámbar, scanline única */
 function SpecimenFrame({ reduced }: { reduced: boolean }) {
   return (
     <div className="relative mx-auto aspect-[4/5] w-full max-w-[200px] border border-hairline bg-surface md:mx-0 md:max-w-[320px]">
@@ -71,7 +72,7 @@ function SpecimenFrame({ reduced }: { reduced: boolean }) {
       <div className="absolute inset-0 overflow-hidden">
         <Image
           src="/mateo.jpeg"
-          alt={`Retrato de ${IDENTITY.name}`}
+          alt={`Retrato de ${FOUNDER.name}, ${FOUNDER.role.toLowerCase()} de Pulso`}
           fill
           sizes="(min-width: 768px) 320px, 200px"
           className="object-cover object-top grayscale contrast-[1.08] brightness-[0.72]"
@@ -123,10 +124,32 @@ function SpecimenFrame({ reduced }: { reduced: boolean }) {
   );
 }
 
+/** los tres pilares de la empresa: equipo, IA y sistemas en producción */
+function Pillars() {
+  return (
+    <ul className="mt-12 divide-y divide-hairline border-y border-hairline">
+      {ABOUT.pillars.map((p) => (
+        <li
+          key={p.k}
+          className="grid gap-x-6 gap-y-1 py-5 md:grid-cols-[120px_1fr]"
+        >
+          <MonoLabel tone="dim">{p.k}</MonoLabel>
+          <div>
+            <p className="font-medium text-ink">{p.t}</p>
+            <p className="mt-1 max-w-[52ch] text-[15px] leading-relaxed text-dim">
+              {p.d}
+            </p>
+          </div>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
 /** ficha técnica: filas key/value separadas por hairlines */
 function TechSheet() {
   return (
-    <dl className="mt-10 divide-y divide-hairline">
+    <dl className="mt-8 divide-y divide-hairline border-t border-hairline">
       {ABOUT.ficha.map((row) => (
         <div
           key={row.k}
@@ -142,15 +165,40 @@ function TechSheet() {
   );
 }
 
+/** el fundador: quién está del otro lado del teléfono */
+function FounderCard() {
+  return (
+    <div className="mt-8">
+      <MonoLabel tone="amber">{FOUNDER.label}</MonoLabel>
+      <p className="mt-3 font-display text-2xl font-bold tracking-[-0.01em] text-ink">
+        {FOUNDER.name}
+      </p>
+      <p className="mt-1 text-sm text-pulse">{FOUNDER.role}</p>
+
+      <div className="mt-5 space-y-4">
+        {FOUNDER.bio.map((p, i) => (
+          <p key={i} className="text-[15px] leading-relaxed text-dim">
+            {p}
+          </p>
+        ))}
+      </div>
+
+      <blockquote className="mt-6 border-l border-pulse/40 pl-5 text-[15px] leading-relaxed text-ink">
+        {FOUNDER.quote}
+      </blockquote>
+    </div>
+  );
+}
+
 export function About() {
   const reduced = useReducedMotion();
 
   return (
-    <Section id="sobre-mi">
+    <Section id="empresa">
       <SectionTitle title={ABOUT.title} />
 
-      <div className="grid gap-10 lg:grid-cols-12">
-        {/* Columna de texto dominante */}
+      <div className="grid gap-10 lg:grid-cols-12 lg:gap-16">
+        {/* Columna de texto dominante: la empresa */}
         <div className="lg:col-span-7">
           <motion.div
             className="max-w-[60ch] space-y-6"
@@ -174,12 +222,17 @@ export function About() {
               </div>
             ))}
           </motion.div>
+
+          <Reveal delay={0.1}>
+            <Pillars />
+          </Reveal>
         </div>
 
-        {/* Espécimen + ficha técnica */}
+        {/* El fundador + la ficha de la empresa */}
         <div className="lg:col-span-5">
-          <Reveal delay={0.15} className="lg:max-w-[320px]">
+          <Reveal delay={0.15} className="lg:max-w-[360px]">
             <SpecimenFrame reduced={!!reduced} />
+            <FounderCard />
             <TechSheet />
           </Reveal>
         </div>

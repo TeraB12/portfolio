@@ -40,7 +40,7 @@ export function Timeline() {
   const scaleY = useSpring(scrollYProgress, { stiffness: 100, damping: 20 });
 
   return (
-    <Section id="timeline">
+    <Section id="historia">
       <SectionTitle title={TIMELINE.title} />
 
       <div ref={trackRef} className="relative">
