@@ -56,8 +56,8 @@ export function Process() {
 
       <Reveal delay={0.2}>
         <div className="mt-14 flex flex-col items-start gap-5 border-t border-hairline pt-10 md:mt-20 md:flex-row md:items-center md:justify-between">
-          <p className="max-w-[46ch] text-[15px] leading-relaxed text-dim">
-            La primera charla no se cobra ni te compromete a nada. Me escribís, me contás y te respondo yo.
+          <p className="max-w-[52ch] text-[15px] leading-relaxed text-dim">
+            {PROCESS.closer}
           </p>
           <ButtonLink
             href="#contacto"
@@ -67,7 +67,7 @@ export function Process() {
             }}
             className="w-full shrink-0 sm:w-auto"
           >
-            Pedí tu presupuesto
+            {PROCESS.closerCta}
           </ButtonLink>
         </div>
       </Reveal>

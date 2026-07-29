@@ -8,6 +8,13 @@
 // tecnicismos. La voz es "nosotros": es una empresa, no una persona.
 // Mateo Pereyra queda como fundador y cara visible (sección Empresa), porque
 // conocer a quién está atrás baja el miedo a contratar.
+//
+// REGLA DE POSICIONAMIENTO: lo que vendemos son SISTEMAS A MEDIDA, uno por
+// cliente. Que por dentro varios corran sobre la misma base es un detalle
+// técnico nuestro, no la oferta. PROHIBIDO en texto visible: "SaaS",
+// "multi-tenant", "plataforma multi-tenant", "licencia", "suscribite".
+// Los clientes se nombran por su nombre (MyA, Logiweb, El Paso del Elefante).
+//
 // La jerga de programación sobrevive solo como "sello de respaldo" (chico) en
 // las secciones donde aporta confianza (Herramientas, Lo que dominamos, Por qué).
 // Se conserva el lenguaje de marca PULSO (señal, latido, operativo, telemetría).
@@ -58,7 +65,6 @@ export const WAYPOINTS = [
   { id: "proceso", label: "CÓMO TRABAJAMOS" },
   { id: "casos", label: "CASOS" },
   { id: "empresa", label: "LA EMPRESA" },
-  { id: "trayectoria", label: "TRAYECTORIA" },
   { id: "skills", label: "LO QUE DOMINAMOS" },
   { id: "stack", label: "HERRAMIENTAS" },
   { id: "tecnologias", label: "POR QUÉ" },
@@ -77,44 +83,116 @@ export const PROJECTS = {
   eyebrow: "SISTEMAS FUNCIONANDO",
   title: "Proyectos",
   intro:
-    "No mostramos maquetas: cada tarjeta es la portada real de un sistema que hoy está online. Deslizá para verlos todos.",
+    "No mostramos maquetas: cada tarjeta es un sistema que hoy está funcionando en una empresa real. Deslizá para verlos todos.",
   hint: "Deslizá para ver todos",
   items: [
     {
-      id: "plataforma",
-      name: "Plataforma multi-tenant",
-      kind: "El sistema completo con el que una empresa vende, cobra y factura",
+      id: "gestion",
+      name: "Sistema de gestión a medida",
+      kind: "El centro de operaciones de una empresa, hecho para cómo trabaja",
       description:
-        "Nuestro desarrollo más grande: una sola plataforma donde cada empresa tiene su tienda con dominio propio, su punto de venta, su facturación y su equipo, con los datos de cada una completamente separados.",
+        "Ventas, stock, compras, caja, facturación, clientes y reportes en una sola pantalla. Cada empresa recibe el suyo, con su dominio, su marca y sus reglas: no es un programa enlatado al que haya que adaptarse.",
       bullets: [
-        "Del mostrador a la factura en un solo paso",
-        "Cada empresa con su dominio, su marca y sus datos",
+        "Cada empresa con su sistema, su dominio y sus datos",
+        "Permisos por puesto de trabajo",
         "Mejoras y soporte todas las semanas",
       ],
-      specs: ["PUNTO DE VENTA", "AFIP", "MERCADO PAGO", "MULTI EMPRESA"],
-      shot: "/previews/panel.webp",
+      specs: ["GESTIÓN", "PUNTO DE VENTA", "AFIP", "REPORTES"],
+      // PENDIENTE: captura del centro de control (la vista de red del inicio).
+      // Cuando el archivo esté en public/previews/panel.webp, poner acá esa
+      // ruta y la tarjeta cambia sola del esquema a la foto real.
+      shot: null,
       shotAlt:
-        "Portada de la consola de la plataforma multi tenant, con el acceso al centro de control.",
-      url: "https://panel.plataformaterab.com",
-      urlLabel: "Ver en vivo",
+        "Centro de control del sistema de gestión, con el mapa de proyectos, comercios y cobros conectados.",
+      url: null,
+      urlLabel: null,
     },
     {
       id: "mya",
       name: "MyA Importaciones",
       kind: "Un mayorista real operando todo su día a día con el sistema",
       description:
-        "Tienda online con dominio propio, catálogo de más de 2.300 productos con fotos y variantes, cobros, envíos y facturación electrónica. Todo el circuito del negocio funciona sobre la plataforma.",
+        "Tienda online con dominio propio, catálogo de más de 2.300 productos con fotos y variantes, cobros, envíos y facturación electrónica. Todo el circuito del negocio funciona sobre el sistema, del mostrador a la factura.",
       bullets: [
         "Más de 2.300 productos con sus fotos y variantes",
+        "Venta de mostrador, tienda online y mayorista, juntas",
         "Cobros, envíos y facturación electrónica",
-        "Catálogo propio para cada revendedor",
       ],
-      specs: ["TIENDA ONLINE", "CATÁLOGO", "COBROS", "EN PRODUCCIÓN"],
+      specs: ["TIENDA ONLINE", "MAYORISTA", "COBROS", "EN PRODUCCIÓN"],
       shot: "/previews/mya.webp",
       shotAlt:
         "Portada de la tienda online de MyA Importaciones, con su buscador, sus categorías y sus promociones.",
       url: "https://myaimportaciones.com.ar",
       urlLabel: "Ver en vivo",
+    },
+    {
+      id: "catalogos",
+      name: "Catálogos automáticos",
+      kind: "Un catálogo online propio para cada revendedor, creado solo",
+      description:
+        "Cada revendedor recibe su catálogo con su dominio, su logo, su surtido y sus precios. El alta es automática: se carga al revendedor y el catálogo queda publicado, tomando el stock del sistema. En la imagen, cuatro reales: Logiweb Distribuciones, De todo para hogar, Wolf Tecno Hogar y MF FRESH.",
+      bullets: [
+        "Se publica solo, sin que nadie lo arme a mano",
+        "Marca, dominio y precios propios de cada revendedor",
+        "El stock sale del sistema, siempre al día",
+      ],
+      specs: ["AUTOMÁTICO", "DOMINIO PROPIO", "MARCA PROPIA"],
+      shot: "/previews/catalogos.webp",
+      shotAlt:
+        "Cuatro catálogos de revendedores reales, cada uno con su logo, su nombre y su surtido de productos.",
+      url: "https://logiweb.catalogocba.com.ar",
+      urlLabel: "Ver un catálogo",
+    },
+    {
+      id: "logiweb",
+      name: "Logiweb Distribuciones",
+      kind: "Una distribuidora con funciones hechas para su operación",
+      description:
+        "Sobre el sistema base le construimos lo que su operación pedía: importar listas de precios del proveedor, emitir remitos, exportar a PDF, vender por medio pack y un tablero con sus números. Cada función se enciende solo para quien la necesita.",
+      bullets: [
+        "Importación de listas de precios del proveedor",
+        "Remitos y exportación a PDF",
+        "Venta por medio pack y tablero propio",
+      ],
+      specs: ["A MEDIDA", "REMITOS", "LISTAS DE PRECIOS"],
+      shot: null,
+      shotAlt: null,
+      url: "https://logiweb.catalogocba.com.ar",
+      urlLabel: "Ver su catálogo",
+    },
+    {
+      id: "elefante",
+      name: "El Paso del Elefante",
+      kind: "Sistema a medida para depósito y taller, en desarrollo",
+      description:
+        "Un sistema pensado para una operación distinta: control de depósito por racks y posiciones, tareas con cronómetro para medir el trabajo real, y cuenta corriente en pesos y en dólares. Cada módulo se activa solo para esta empresa.",
+      bullets: [
+        "Depósito por racks y posiciones",
+        "Tareas con cronómetro para medir el trabajo",
+        "Cuenta corriente en pesos y en dólares",
+      ],
+      specs: ["DEPÓSITO", "TAREAS", "PESOS Y DÓLARES"],
+      shot: null,
+      shotAlt: null,
+      url: null,
+      urlLabel: null,
+    },
+    {
+      id: "meli",
+      name: "Sistema automático Meli",
+      kind: "Ventas y estadísticas de Mercado Libre en un solo lugar",
+      description:
+        "La pantalla donde una empresa maneja todas sus ventas y estadísticas de Mercado Libre sin entrar cuenta por cuenta, con varias cuentas y varias empresas conviviendo a la vez.",
+      bullets: [
+        "Varias cuentas manejadas sin entrar una por una",
+        "Ventas y números claros para decidir con datos",
+        "Varias empresas, cada una con su operación",
+      ],
+      specs: ["MERCADO LIBRE", "VARIAS CUENTAS", "ESTADÍSTICAS"],
+      shot: null,
+      shotAlt: null,
+      url: null,
+      urlLabel: null,
     },
     {
       id: "evolux",
@@ -133,41 +211,6 @@ export const PROJECTS = {
         "Portada de la web de Evolux, agencia especialista en Mercado Libre, con su titular y sus métricas.",
       url: "https://evolux-rouge.vercel.app",
       urlLabel: "Ver en vivo",
-    },
-    {
-      id: "catalogos",
-      name: "Catálogos automáticos",
-      kind: "Un catálogo online propio para cada revendedor, creado solo",
-      description:
-        "Cada revendedor recibe su propio catálogo con su dominio, su logo y sus precios. El alta es automática: la empresa carga al revendedor y el catálogo queda publicado sin que nadie lo arme a mano.",
-      bullets: [
-        "El catálogo se publica solo, sin trabajo manual",
-        "Marca, dominio y precios propios de cada revendedor",
-        "El stock sale del sistema, siempre al día",
-      ],
-      specs: ["AUTOMÁTICO", "DOMINIO PROPIO", "PRECIOS POR REVENDEDOR"],
-      shot: "/previews/pulso.webp",
-      shotAlt:
-        "Portada de un catálogo de revendedor generado automáticamente, con su buscador y sus categorías.",
-      url: "https://pulso.catalogocba.com.ar",
-      urlLabel: "Ver un catálogo",
-    },
-    {
-      id: "meli",
-      name: "Sistema automático Meli",
-      kind: "Ventas y estadísticas de Mercado Libre en un solo lugar",
-      description:
-        "La plataforma donde una empresa maneja todas sus ventas y estadísticas de Mercado Libre desde una sola pantalla, con varias cuentas y varias empresas conviviendo a la vez.",
-      bullets: [
-        "Varias cuentas manejadas sin entrar una por una",
-        "Ventas y números claros para decidir con datos",
-        "Varias empresas, cada una con su operación",
-      ],
-      specs: ["MERCADO LIBRE", "VARIAS CUENTAS", "ESTADÍSTICAS"],
-      shot: null,
-      shotAlt: null,
-      url: null,
-      urlLabel: null,
     },
     {
       id: "asistente",
@@ -203,39 +246,22 @@ export const PROJECTS = {
       url: null,
       urlLabel: null,
     },
-  ],
-} as const;
-
-// Archivo de proyectos: el recorrido antes y alrededor de la plataforma.
-// No venden: cuentan. El stack chico queda como sello; solo linkea demos vivas.
-export const PROJECT_ARCHIVE = {
-  title: "Archivo",
-  intro:
-    "El recorrido también cuenta: del primer proyecto grande a todo lo que vino después.",
-  items: [
     {
-      name: "Falling Life",
-      year: "2022",
-      description:
-        "Web completa para un servidor de rol de GTA V. El primer proyecto grande y el primer cliente de verdad, hecha a mano desde cero.",
-      stack: ["HTML", "CSS", "JavaScript"],
-      link: "https://fallinglife-finalproyect.netlify.app",
-    },
-    {
+      id: "sneakers",
       name: "Sneakers Hub",
-      year: "2025-2026",
+      kind: "Tienda de zapatillas construida de cero, pieza por pieza",
       description:
-        "Tienda de zapatillas construida y reconstruida en varias etapas: cuentas de usuario, roles, carrito y tickets de compra.",
-      stack: ["Node.js", "Express", "MongoDB"],
-      link: null,
-    },
-    {
-      name: "Panel de administración",
-      year: "2026",
-      description:
-        "El panel con el que cada empresa maneja productos, pedidos, caja, clientes y reportes, con permisos por puesto de trabajo.",
-      stack: ["Next.js", "NestJS", "PostgreSQL"],
-      link: null,
+        "Una tienda completa levantada y reconstruida en varias etapas: cuentas de usuario con roles y permisos, carrito, control de stock y tickets de compra. El banco de pruebas donde se afinó lo que después entró a los sistemas de clientes.",
+      bullets: [
+        "Cuentas, roles y permisos",
+        "Carrito, stock y tickets de compra",
+        "Construida y reconstruida por etapas",
+      ],
+      specs: ["TIENDA", "CUENTAS Y ROLES", "CARRITO"],
+      shot: null,
+      shotAlt: null,
+      url: null,
+      urlLabel: null,
     },
   ],
 } as const;
@@ -266,7 +292,11 @@ export const SERVICES = {
       name: "Automatización con IA",
       description:
         "Sacamos de encima las tareas repetitivas: carga de datos, avisos, seguimientos y respuestas a clientes. Menos horas perdidas y menos errores humanos.",
-      bullets: ["Tareas en piloto automático", "Asistentes que responden solos", "Menos carga manual"],
+      bullets: [
+        "Tareas en piloto automático",
+        "Asistentes que responden solos",
+        "Menos carga manual",
+      ],
     },
     {
       id: "tiendas",
@@ -288,7 +318,7 @@ export const SERVICES = {
 } as const;
 
 // Cómo trabajamos: los pasos de la relación con el cliente, de la primera charla
-// al sistema andando. Baja el miedo a contratar a alguien que no conocés.
+// al sistema andando. Baja el miedo a contratar a una empresa que no conocés.
 export const PROCESS = {
   eyebrow: "SIN VUELTAS",
   title: "Cómo trabajamos",
@@ -320,17 +350,21 @@ export const PROCESS = {
         "Te lo entregamos funcionando y capacitamos a tu equipo. El sistema queda siendo tuyo, y un abono mensual cubre el hosting, el mantenimiento y las mejoras, para que siga al día sin sorpresas.",
     },
   ],
+  // cierre debajo de los pasos, al lado del CTA
+  closer:
+    "La primera charla no se cobra ni te compromete a nada. Nos escribís, nos contás tu operación y te respondemos con una propuesta concreta.",
+  closerCta: "Pedí tu presupuesto",
 } as const;
 
 export const CASE_STUDIES = {
   eyebrow: "FUNCIONANDO · MYA IMPORTACIONES",
   title: "Casos de éxito",
   intro:
-    "Una empresa mayorista y minorista real que maneja todo su día a día con nuestro sistema: ventas de mostrador, tienda online, facturación y catálogos para revendedores.",
+    "Una empresa mayorista y minorista real que maneja todo su día a día con nuestro sistema: ventas de mostrador, tienda online, facturación y catálogos para sus revendedores.",
   metrics: [
     { value: 2300, suffix: "+", label: "productos cargados con sus fotos y variantes" },
     { value: 6, suffix: "", label: "conexiones funcionando en su día a día" },
-    { value: 51, suffix: "", label: "etapas probadas una por una antes de salir a vender" },
+    { value: 4, suffix: "", label: "revendedores con su propio catálogo publicado" },
   ],
   flowQuote:
     "Una venta de mostrador descuenta stock, cobra, factura y queda en los reportes. Sin planillas, sin doble carga, sin fin de mes a mano.",
@@ -345,7 +379,7 @@ export const ABOUT = {
   title: "Somos Pulso.",
   paragraphs: [
     "Pulso es una empresa de desarrollo de software a medida con base en Córdoba. Construimos los sistemas que una empresa necesita para vender, producir y administrar sin planillas sueltas ni tareas repetidas a mano.",
-    "Trabajamos con desarrolladores de software certificados y sumamos automatizaciones con inteligencia artificial donde de verdad ahorran horas. No vendemos licencias de un programa enlatado: cada sistema se diseña sobre la operación real del cliente.",
+    "Trabajamos con desarrolladores de software certificados y sumamos automatizaciones con inteligencia artificial donde de verdad ahorran horas. No vendemos licencias de un programa enlatado: cada sistema se diseña sobre la operación real del cliente, y se le agrega lo que esa empresa necesita y nada más.",
     "No entregamos demos que quedan a medias: entregamos sistemas funcionando. Y nos quedamos cerca, midiendo y mejorando cada semana para que el sistema le siga rindiendo al negocio.",
   ],
   pillars: [
@@ -380,84 +414,11 @@ export const FOUNDER = {
   name: "Mateo Valentin Pereyra",
   role: "Fundador y director de desarrollo",
   bio: [
-    "Arranqué programando para clientes en 2022 y desde entonces no paré. Diseñé y construí la plataforma con la que hoy varias empresas venden, cobran y facturan todos los días, y la sigo operando de punta a punta.",
-    "Estoy cursando la Diplomatura en Desarrollo de Software y ya obtuve 12 certificaciones en el camino, de arquitectura y rendimiento a control de calidad y ciberseguridad. En cada proyecto de Pulso estoy yo del otro lado del teléfono.",
+    "Arranqué programando para clientes en 2022 y desde entonces no paré. Diseñé y construí los sistemas con los que hoy varias empresas venden, cobran y facturan todos los días, y sigo al frente de cada proyecto.",
+    "Estoy cursando la Diplomatura en Desarrollo de Software y ya obtuve 12 certificaciones en el camino, de arquitectura y rendimiento a control de calidad y ciberseguridad. En cada proyecto de Pulso hay alguien del equipo del otro lado del teléfono, y muchas veces soy yo.",
   ],
   quote:
     "Prefiero un sistema que resuelva un problema real antes que uno lleno de funciones que nadie usa.",
-} as const;
-
-export const EXPERIENCE = {
-  title: "Trayectoria",
-  rows: [
-    {
-      period: "2025-HOY",
-      role: "Plataforma multi-tenant",
-      org: "Desarrollo propio",
-      summary:
-        "El sistema completo con el que una empresa vende, cobra y factura sin planillas, construido y operado por nosotros de punta a punta.",
-      detail:
-        "Una sola plataforma hecha a medida: cada empresa con su tienda y su dominio propio, punto de venta, facturación AFIP, cobros con Mercado Pago, ventas por Mercado Libre, app para el celular y un asistente con inteligencia artificial. Todo online y con mejoras cada semana.",
-    },
-    {
-      period: "2026",
-      role: "Puesta en marcha real",
-      org: "MyA Importaciones",
-      summary: "Una empresa real funcionando por completo con el sistema.",
-      detail:
-        "Carga de más de 2.300 productos con sus fotos y variantes, configuración del punto de venta para la venta diaria, facturación electrónica, un catálogo propio para cada revendedor y capacitación del equipo. Todo el día a día de la empresa funciona con el sistema.",
-    },
-    {
-      period: "2026",
-      role: "Sistema automático Meli",
-      org: "Proyecto a medida",
-      summary:
-        "Ventas y estadísticas de Mercado Libre, con varias cuentas y varias empresas en un solo lugar.",
-      detail:
-        "Un solo lugar donde la empresa maneja todas sus ventas y estadísticas de Mercado Libre sin entrar cuenta por cuenta: soporta varias cuentas y varias empresas a la vez, cada una con sus números y su operación. Hecho a medida de principio a fin.",
-    },
-    {
-      period: "2026",
-      role: "Web institucional",
-      org: "Evolux",
-      summary:
-        "Desarrollo web a medida para una agencia especialista en Mercado Libre.",
-      detail:
-        "Diseño y desarrollo a medida de la web de Evolux: su propuesta, sus servicios y sus resultados, con foco en captar consultas de nuevas marcas. Hecha de cero para ellos.",
-    },
-    {
-      period: "MAR 2025-HOY",
-      role: "Formación certificada",
-      org: "Diplomatura en Desarrollo de Software",
-      summary:
-        "Formación integral en desarrollo, con 12 certificaciones ya obtenidas en el camino.",
-      detail:
-        "La diplomatura ordena la teoría; los sistemas reales son la escuela de verdad, donde cada tema se pone a prueba con clientes del otro lado. Certificaciones obtenidas hasta hoy:",
-      certs: [
-        "Desarrollo web",
-        "JavaScript",
-        "React JS",
-        "Arquitectura de sistemas",
-        "Rendimiento y escalabilidad",
-        "Control de calidad (QA)",
-        "Ciberseguridad",
-        "Java",
-        "Gestión ágil de proyectos",
-        "Trabajo con inteligencia artificial",
-        "Cultura digital",
-        "Inglés avanzado",
-      ],
-    },
-    {
-      period: "2022",
-      role: "Primer cliente real",
-      org: "Falling Life",
-      summary:
-        "Web completa para un servidor de rol de GTA V: la primera experiencia con un cliente de verdad.",
-      detail:
-        "El primer proyecto grande: la web oficial de un servidor de rol de GTA V, hecha a mano desde cero. Ahí se aprendió lo que no enseña ningún curso: escuchar lo que el cliente necesita, entregar a tiempo y ajustar con su devolución.",
-    },
-  ],
 } as const;
 
 // Constelación de "lo que dominamos". weight = font-weight REAL de Satoshi
@@ -595,31 +556,31 @@ export const TIMELINE = {
       stamp: "2022",
       title: "El primer cliente",
       detail:
-        "La web de un servidor de rol de GTA V, hecha a mano. El primer proyecto grande y la primera entrega real.",
+        "La web de un servidor de rol, hecha a mano y entregada a tiempo. El primer proyecto grande y la primera lección: escuchar antes de programar.",
     },
     {
       stamp: "2025",
-      title: "Nace la plataforma",
+      title: "El primer sistema de gestión",
       detail:
-        "Arranca el diseño, pensado a medida desde el día cero para que cada empresa tenga lo suyo.",
+        "Arranca el desarrollo del sistema completo con el que una empresa vende, cobra y factura, pensado a medida desde el día cero.",
     },
     {
       stamp: "2025-2026",
       title: "51 etapas de desarrollo",
       detail:
-        "Ventas, tiendas, punto de venta, cobros y facturación: el sistema completo, probado pieza por pieza.",
+        "Ventas, tienda, punto de venta, cobros y facturación: el sistema completo, probado pieza por pieza antes de tocar un cliente.",
     },
     {
       stamp: "JUN 2026",
-      title: "Sale a la calle",
+      title: "La primera empresa vendiendo",
       detail:
-        "La plataforma queda online y funcionando, con su dominio propio y conexión segura.",
+        "MyA Importaciones carga todo su catálogo, capacita a su equipo y pasa a operar su día a día con el sistema.",
     },
     {
-      stamp: "JUN 2026",
-      title: "Primera empresa vendiendo",
+      stamp: "2026",
+      title: "Más empresas, más a medida",
       detail:
-        "MyA Importaciones carga todo su catálogo y empieza a vender con el sistema.",
+        "Se suman Logiweb Distribuciones con sus funciones propias, El Paso del Elefante con su depósito y sus tareas, y Evolux con su web.",
     },
     {
       stamp: "HOY",
@@ -633,10 +594,10 @@ export const TIMELINE = {
 export const TESTIMONIALS = {
   title: "Testimonios",
   // Todavía no hay testimonios escritos, así que en vez de un hueco mostramos
-  // PRUEBA real y verificable: un cliente operando y sus revendedores activos.
+  // PRUEBA real y verificable: clientes operando y sus revendedores activos.
   proof: {
     label: "SEÑAL RECIBIDA",
-    text: "Los números hablan antes que las palabras: MyA Importaciones maneja todo su día a día con el sistema desde junio de 2026, y ya tiene 3 revendedores con su propio catálogo activo. Los testimonios escritos van a aparecer acá cuando los clientes quieran contarlo.",
+    text: "Los números hablan antes que las palabras: MyA Importaciones maneja todo su día a día con el sistema desde junio de 2026, y ya tiene 4 revendedores con su propio catálogo publicado. Los testimonios escritos van a aparecer acá cuando los clientes quieran contarlo.",
     ctaLabel: "Ver la tienda en vivo",
     ctaHref: "https://myaimportaciones.com.ar",
   },

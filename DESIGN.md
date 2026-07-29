@@ -3,13 +3,21 @@
 > **Concepto:** el sitio no es un portfolio, es un organismo de software vivo. Todo el sitio
 > comparte un único reloj cardíaco global (un latido cada ~4.5s) que se propaga por una señal
 > continua: nace horizontal en el hero como electrocardiograma y baja como columna vertebral
-> (spine) por el margen izquierdo durante las 13 secciones. La telemetría es honesta: uptime
+> (spine) por el margen izquierdo durante las 12 secciones. La telemetría es honesta: uptime
 > real de la sesión, hora real de Córdoba, datos reales de la plataforma en producción.
 > **Mensaje en 5 segundos:** "esta empresa no hace demos; opera sistemas que respiran."
 
 Design Read: sitio de PULSO, empresa de desarrollo de software a medida, para captar empresas
 como clientes; lenguaje experimental-premium (Awwwards), en español (Argentina, profesional).
 La voz es "nosotros"; Mateo Pereyra aparece como fundador y cara visible en La empresa.
+
+**POSICIONAMIENTO (regla dura de copy):** lo que se vende son SISTEMAS A MEDIDA, uno por
+cliente. Que por dentro varios corran sobre la misma base es un detalle técnico interno, NO la
+oferta. PROHIBIDO en texto visible: "SaaS", "multi-tenant", "plataforma multi-tenant",
+"licencia", "suscribite". Los clientes se nombran por su nombre: MyA Importaciones, Logiweb
+Distribuciones, El Paso del Elefante, Evolux. Y la voz es SIEMPRE plural: nada de "me escribís",
+"te respondo yo", "mi trabajo". Todo el texto visible vive en `content/data.ts`, sin excepción
+(el cierre y el CTA de Cómo trabajamos también: `PROCESS.closer` y `PROCESS.closerCta`).
 Dials: `DESIGN_VARIANCE: 8 / MOTION_INTENSITY: 7 / VISUAL_DENSITY: 3`.
 
 ---
@@ -115,7 +123,7 @@ Un solo reloj para TODO el sitio. Nada late por su cuenta.
 - Testimonios: NO inventar. Tratamiento "ZONA SIN RELEVAR": achurado diagonal sutil + texto
   honesto ("Los primeros clientes están operando; sus palabras van a aparecer acá.").
 
-## 8. Las 13 secciones (familia de layout + motion motivado)
+## 8. Las 12 secciones (familia de layout + motion motivado)
 
 El orden vende en este orden: primero la PRUEBA (proyectos funcionando), después qué vendemos
 y cómo trabajamos, y recién entonces quiénes somos. `app/page.tsx` y `WAYPOINTS` en
@@ -124,18 +132,21 @@ y cómo trabajamos, y recién entonces quiénes somos. `app/page.tsx` y `WAYPOIN
 | # | Sección | id | Archivo | Layout (familia única) | Motion |
 |---|---|---|---|---|---|
 | 1 | Hero | `inicio` | `Hero.tsx` + `HeroSignal.tsx` | Editorial monumental asimétrico: lockup PULSO/SOFTWARE gigante arriba-izq, ECG horizontal al 62%, telemetría mono arriba-der | Boot: línea se dibuja → primer latido enciende la marca letra por letra (rise+blur). Línea se curva hacia el cursor (spring, ±12px) |
-| 2 | Proyectos | `proyectos` | `Projects.tsx` | **Carrusel de tarjetas deslizables** full-bleed: cada tarjeta es un instrumento con visor 16/10 arriba (CAPTURA REAL de la portada del sistema desde `public/previews`, o el esquema SVG honesto si el proyecto no es público), anillo de specs mono, ficha con titular, bajada, bullets y "Ver en vivo". Barra de instrumento arriba: índice `01 / 07`, progreso hairline, flechas | Scroll-snap nativo + arrastre con mouse + flechas. Índice activo por IntersectionObserver (root = riel), NO por listener de scroll. La captura vive apagada (brightness .82) y se enciende al hover |
+| 2 | Proyectos | `proyectos` | `Projects.tsx` | **Carrusel de tarjetas deslizables** full-bleed: cada tarjeta es un instrumento con visor 16/10 arriba (CAPTURA REAL de la portada del sistema desde `public/previews`, o el esquema SVG honesto si el proyecto no es público), anillo de specs mono, ficha con titular, bajada, bullets y "Ver en vivo". Barra de instrumento arriba: índice `01 / 10`, progreso hairline, flechas. NO hay sección Archivo: todo proyecto que se muestra es una tarjeta más | Scroll-snap nativo + arrastre con mouse + flechas. Índice activo por IntersectionObserver (root = riel), NO por listener de scroll. La captura vive apagada (brightness .82) y se enciende al hover |
 | 3 | Servicios | `servicios` | `Services.tsx` | Grid asimétrico 2×2 desigual (celda "Sistemas de gestión a medida" dominante), bordes hairline, sin sombras | Hover: contenido sube 4px + tick mono de confirmación |
 | 4 | Cómo trabajamos | `proceso` | `Process.tsx` | Los 4 pasos de la relación con el cliente, numerados en mono | Reveal escalonado |
 | 5 | Casos de éxito | `casos` | `CaseStudies.tsx` | Dossier documental: cabecera mono "FUNCIONANDO · MYA IMPORTACIONES", 3 columnas de datos duros, cita del flujo real | Números cuentan desde 0 UNA vez al entrar, disparados por el latido |
 | 6 | La empresa | `empresa` | `About.tsx` | Split asimétrico 7/5: izq quiénes somos + los 3 pilares (equipo certificado / IA / producción) en filas hairline; der el FUNDADOR como espécimen (retrato duotono ámbar anclado a la spine) con bio, cita y ficha | Párrafos revelados por línea con máscara; una única pasada de scanline sobre el retrato (una vez) |
-| 7 | Trayectoria | `trayectoria` | `Experience.tsx` | Tabla tipográfica editorial full-width, filas con año en mono al margen, acordeón. SIN cards | Al expandir, la spine emite un pulso lateral hacia la fila (feedback) |
-| 8 | Lo que dominamos | `skills` | `Skills.tsx` | Constelación SVG de nodos agrupados, conectados con líneas 1px. Peso tipográfico del label = dominio real. SIN barras ni % | Nodos respiran con `--pulse`/`--pulse-b`; hover ilumina la cadena real de dependencias |
-| 9 | Herramientas | `stack` | `Stack.tsx` | Banda horizontal full-bleed tipo bahía de racks: módulos rectangulares, nombre mono, LED. Scroll-snap horizontal contenido en la franja | Boot sequence: LEDs encienden en secuencia al entrar; después laten con el reloj global en offsets |
-| 10 | Por qué | `tecnologias` | `FavoriteTech.tsx` | Índice tipográfico gigante: palabras enormes en outline que se llenan de ámbar al hover; panel lateral fijo mono con el porqué honesto | Fill con clip-path al hover + crossfade del panel |
-| 11 | La historia | `historia` | `Timeline.tsx` | La línea pasa AL CENTRO: hitos alternados izq/der como eventos de log con timestamp mono | Scrub ScrollTrigger: el latido viaja por la línea y enciende cada hito al llegar |
-| 12 | Testimonios | `testimonios` | `Testimonials.tsx` | Cita monumental única centrada. Placeholder honesto "ZONA SIN RELEVAR" con achurado diagonal | Transición por blur + 12px de desplazamiento |
-| 13 | Contacto | `contacto` | `Contact.tsx` | **El cotizador**: título grande + form en 2 columnas (campos izq, contexto der), CTA "Enviar por WhatsApp" | El latido se acelera con cada campo completado (setRate); submit = golpe de matriz + abre wa.me |
+| 7 | Lo que dominamos | `skills` | `Skills.tsx` | Constelación SVG de nodos agrupados, conectados con líneas 1px. Peso tipográfico del label = dominio real. SIN barras ni % | Nodos respiran con `--pulse`/`--pulse-b`; hover ilumina la cadena real de dependencias |
+| 8 | Herramientas | `stack` | `Stack.tsx` | Banda horizontal full-bleed tipo bahía de racks: módulos rectangulares, nombre mono, LED. Scroll-snap horizontal contenido en la franja | Boot sequence: LEDs encienden en secuencia al entrar; después laten con el reloj global en offsets |
+| 9 | Por qué | `tecnologias` | `FavoriteTech.tsx` | Índice tipográfico gigante: palabras enormes en outline que se llenan de ámbar al hover; panel lateral fijo mono con el porqué honesto | Fill con clip-path al hover + crossfade del panel |
+| 10 | La historia | `historia` | `Timeline.tsx` | La línea pasa AL CENTRO: hitos alternados izq/der como eventos de log con timestamp mono | Scrub ScrollTrigger: el latido viaja por la línea y enciende cada hito al llegar |
+| 11 | Testimonios | `testimonios` | `Testimonials.tsx` | Cita monumental única centrada. Placeholder honesto "ZONA SIN RELEVAR" con achurado diagonal | Transición por blur + 12px de desplazamiento |
+| 12 | Contacto | `contacto` | `Contact.tsx` | **El cotizador**: título grande + form en 2 columnas (campos izq, contexto der), CTA "Enviar por WhatsApp" | El latido se acelera con cada campo completado (setRate); submit = golpe de matriz + abre wa.me |
+
+**Trayectoria (`Experience.tsx`) se eliminó** el 2026-07-29: una tabla de experiencia laboral es
+lenguaje de portfolio personal, no de empresa. Lo que valía de ahí (los hitos) vive en La
+historia, y la formación certificada en los pilares de La empresa.
 | — | Footer | — | `Footer.tsx` | Barra de estado full-width mono: © 2026 Pulso, uptime de sesión, hora local, link "volver arriba" | El punto final late con el reloj global |
 
 **Capturas de portada** (`public/previews/*.webp`): recortadas a 16/10 (1440x900) y convertidas a
@@ -143,9 +154,9 @@ WebP. Se sirven con `unoptimized` en el `<Image>` porque ya vienen al tamaño ex
 cuota de Image Optimization de Vercel en reoptimizar. Para cambiar una, reemplazar el archivo
 con el mismo nombre. Para que una tarjeta vuelva al esquema SVG, poner `shot: null` en `PROJECTS`.
 
-Familias usadas: editorial-monumental, carrusel-instrumento, split-asimétrico, tabla-editorial,
-constelación-SVG, banda-racks, timeline-central, grid-asimétrico, índice-tipográfico, dossier,
-cita-monumental, form-2col, status-bar → 13 layouts, cero repetición.
+Familias usadas: editorial-monumental, carrusel-instrumento, split-asimétrico, constelación-SVG,
+banda-racks, timeline-central, grid-asimétrico, índice-tipográfico, dossier, cita-monumental,
+form-2col, status-bar → 12 layouts, cero repetición.
 
 ## 9. Contacto: el cotizador (requisito del cliente)
 

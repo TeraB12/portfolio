@@ -4,7 +4,6 @@ import { Services } from "@/components/sections/Services";
 import { Process } from "@/components/sections/Process";
 import { CaseStudies } from "@/components/sections/CaseStudies";
 import { About } from "@/components/sections/About";
-import { Experience } from "@/components/sections/Experience";
 import { Skills } from "@/components/sections/Skills";
 import { Stack } from "@/components/sections/Stack";
 import { FavoriteTech } from "@/components/sections/FavoriteTech";
@@ -28,7 +27,6 @@ export default function Home() {
       <Process />
       <CaseStudies />
       <About />
-      <Experience />
       <Skills />
       <Stack />
       <FavoriteTech />

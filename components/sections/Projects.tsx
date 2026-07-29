@@ -18,10 +18,18 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { motion, useReducedMotion } from "motion/react";
+import {
+  animate,
+  motion,
+  useMotionValue,
+  useReducedMotion,
+  useSpring,
+  useTransform,
+  type MotionValue,
+} from "motion/react";
 import { ArrowLeft, ArrowRight, ArrowUpRight } from "lucide-react";
 
-import { PROJECTS, PROJECT_ARCHIVE } from "@/content/data";
+import { PROJECTS } from "@/content/data";
 import { cn } from "@/lib/utils";
 import { EASE } from "@/lib/motion";
 import { Section } from "@/components/ui/Section";
@@ -354,6 +362,126 @@ function MeliSchematic() {
   );
 }
 
+/** Logiweb: la lista del proveedor entra y sale convertida en documentos. */
+function LogiwebSchematic() {
+  return (
+    <svg
+      viewBox="0 0 400 300"
+      className="absolute inset-0 h-full w-full"
+      role="img"
+      aria-label="Esquema de las funciones a medida de Logiweb: la lista de precios del proveedor entra al sistema y sale como remitos, PDF y venta por medio pack."
+    >
+      <SchLine d="M92 150 L140 150" />
+      <SchArrow x={140} y={150} />
+      <SchLine d="M246 150 L286 92" />
+      <SchArrow x={286} y={92} />
+      <SchLine d="M246 150 L286 150" />
+      <SchArrow x={286} y={150} />
+      <SchLine d="M246 150 L286 208" />
+      <SchArrow x={286} y={208} />
+      {/* la señal: la lista cruza el sistema y sale hecha remito */}
+      <SignalPath d="M60 150 L200 150 L316 150" />
+      <SchNode x={60} y={150} w={68} h={26} label="LISTA" />
+      <SchNode x={330} y={92} w={80} h={24} label="REMITOS" />
+      <SchNode x={330} y={150} w={62} h={24} label="PDF" />
+      <SchNode x={330} y={208} w={98} h={24} label="MEDIO PACK" />
+      <SchNode x={200} y={150} w={92} h={30} label="SISTEMA" accent />
+      <circle cx={237} cy={142} r={2.5} fill={SCH.amber} className="led" />
+    </svg>
+  );
+}
+
+/** El Paso del Elefante: depósito por posiciones, tareas medidas y cuenta en dos monedas. */
+function ElefanteSchematic() {
+  return (
+    <svg
+      viewBox="0 0 400 300"
+      className="absolute inset-0 h-full w-full"
+      role="img"
+      aria-label="Esquema del sistema de El Paso del Elefante: un depósito dividido en racks y posiciones, tareas con cronómetro y cuenta corriente en pesos y en dólares."
+    >
+      {/* la grilla del depósito: racks y posiciones */}
+      {[0, 1, 2].map((row) =>
+        [0, 1, 2, 3].map((col) => (
+          <rect
+            key={`${row}-${col}`}
+            x={40 + col * 26}
+            y={62 + row * 26}
+            width={20}
+            height={20}
+            fill={SCH.nodeFill}
+            stroke={SCH.nodeStroke}
+            strokeWidth={1}
+            vectorEffect="non-scaling-stroke"
+          />
+        )),
+      )}
+      {/* la posición ocupada late */}
+      <rect
+        x={66}
+        y={88}
+        width={20}
+        height={20}
+        fill="rgba(255,180,84,0.25)"
+        stroke="rgba(255,180,84,0.85)"
+        strokeWidth={1}
+        vectorEffect="non-scaling-stroke"
+        className="led"
+      />
+      <text
+        x={92}
+        y={158}
+        textAnchor="middle"
+        dominantBaseline="central"
+        fontSize={10}
+        fill={SCH.amber}
+        style={{ fontFamily: "var(--font-mono)", letterSpacing: "0.08em" }}
+      >
+        DEPÓSITO
+      </text>
+      <SchLine d="M156 100 L214 100" />
+      <SchArrow x={214} y={100} />
+      <SchLine d="M92 176 L92 214 L214 214" />
+      <SchArrow x={214} y={214} />
+      <SchLine d="M296 226 L296 254" />
+      <SchArrow x={296} y={254} dir="down" />
+      {/* la señal: de la posición del depósito a la tarea que la mueve */}
+      <SignalPath d="M76 98 L156 98 L156 100 L258 100" />
+      <SchNode x={258} y={100} w={88} h={26} label="TAREAS" accent />
+      <SchNode x={258} y={214} w={104} h={24} label="CUENTA CTE." />
+      <SchNode x={296} y={268} w={116} h={22} label="PESOS / DÓLAR" />
+      <circle cx={292} cy={92} r={2.5} fill={SCH.amber} className="led-b" />
+    </svg>
+  );
+}
+
+/** Sneakers Hub: cuentas y roles, carrito y ticket de compra. */
+function SneakersSchematic() {
+  return (
+    <svg
+      viewBox="0 0 400 300"
+      className="absolute inset-0 h-full w-full"
+      role="img"
+      aria-label="Esquema de Sneakers Hub: las cuentas con roles entran al carrito, que descuenta stock y emite el ticket de compra."
+    >
+      <SchLine d="M96 118 L146 118" />
+      <SchArrow x={146} y={118} />
+      <SchLine d="M96 196 L146 196" />
+      <SchArrow x={146} y={196} />
+      <SchLine d="M246 157 L292 157" />
+      <SchArrow x={292} y={157} />
+      {/* el stock responde al carrito */}
+      <SchLine d="M200 186 C200 232 116 232 116 214" dashed />
+      <SignalPath d="M60 118 L200 157 L330 157" />
+      <SchNode x={60} y={118} w={72} h={24} label="CUENTAS" />
+      <SchNode x={60} y={196} w={62} h={24} label="STOCK" />
+      <SchNode x={330} y={157} w={72} h={24} label="TICKET" />
+      <SchNode x={200} y={157} w={84} h={30} label="CARRITO" accent />
+      <circle cx={233} cy={149} r={2.5} fill={SCH.amber} className="led" />
+    </svg>
+  );
+}
+
 function Schematic({ id }: { id: ProjectItem["id"] }) {
   switch (id) {
     case "meli":
@@ -362,6 +490,12 @@ function Schematic({ id }: { id: ProjectItem["id"] }) {
       return <AsistenteSchematic />;
     case "android":
       return <AndroidSchematic />;
+    case "logiweb":
+      return <LogiwebSchematic />;
+    case "elefante":
+      return <ElefanteSchematic />;
+    case "sneakers":
+      return <SneakersSchematic />;
     case "catalogos":
       return <CatalogosSchematic />;
     default:
@@ -383,10 +517,33 @@ function CornerTicks() {
   );
 }
 
+/** Cómo se asienta una tarjeta al llegar a su puesto (springs de DESIGN.md §6). */
+const SETTLE = { stiffness: 120, damping: 26, mass: 0.5 } as const;
+
+/** Cuánto dura el viaje de una tarjeta a la siguiente. */
+const TRAVEL = 0.72;
+
 /* ============================================================
-   Tarjeta del carrusel: visor 16/10 + anillo de specs + ficha
+   Tarjeta del carrusel: visor 16/10 + anillo de specs + ficha.
+
+   La tarjeta reacciona A SU POSICIÓN en el riel: `d` es la distancia, medida
+   en tarjetas, hasta el puesto de lectura (0 = la están leyendo). De ahí salen
+   escala, opacidad y color del borde, así el carrusel tiene profundidad y las
+   tarjetas entran y salen en vez de aparecer de golpe.
    ============================================================ */
-function ProjectCard({ item, index }: { item: ProjectItem; index: number }) {
+function ProjectCard({
+  item,
+  index,
+  scrollX,
+  pitchRef,
+  reduced,
+}: {
+  item: ProjectItem;
+  index: number;
+  scrollX: MotionValue<number>;
+  pitchRef: { current: number };
+  reduced: boolean;
+}) {
   // `PROJECTS.items` es `as const`, así que cada tarjeta es un tipo distinto y
   // preguntar por `item.shot` dentro del JSX estrecha la unión a `never`.
   // Sacamos los valores acá, ensanchados, y el JSX no tiene que narrowear nada.
@@ -397,14 +554,54 @@ function ProjectCard({ item, index }: { item: ProjectItem; index: number }) {
   const specs: readonly string[] = item.specs;
   const bullets: readonly string[] = item.bullets;
 
+  // distancia en tarjetas hasta el puesto de lectura
+  const d = useTransform(scrollX, (v) => {
+    const p = pitchRef.current;
+    return p > 0 ? v / p - index : 0;
+  });
+
+  // la vecina no desaparece: queda presente para invitar a deslizar
+  const scaleRaw = useTransform(d, [-1, 0, 1], [0.93, 1, 0.93], {
+    clamp: true,
+  });
+  const opacityRaw = useTransform(d, [-1, 0, 1], [0.42, 1, 0.42], {
+    clamp: true,
+  });
+  const borderRaw = useTransform(
+    d,
+    [-0.6, 0, 0.6],
+    [
+      "rgba(233,230,221,0.08)",
+      "rgba(255,180,84,0.32)",
+      "rgba(233,230,221,0.08)",
+    ],
+    { clamp: true },
+  );
+
+  // el spring es lo que hace que "asiente" en vez de cortar seco
+  const scale = useSpring(scaleRaw, SETTLE);
+  const opacity = useSpring(opacityRaw, SETTLE);
+
   return (
-    <article
+    <motion.article
       data-card
       data-index={index}
+      style={
+        reduced
+          ? undefined
+          : {
+              scale,
+              opacity,
+              borderColor: borderRaw,
+              transformOrigin: "50% 45%",
+              willChange: "transform, opacity",
+            }
+      }
       className={cn(
         "group relative flex w-[86vw] max-w-[880px] flex-none snap-start flex-col",
-        "border border-hairline bg-surface/40 transition-colors duration-500",
-        "hover:border-pulse/30 md:w-[72vw]",
+        "border border-hairline bg-surface/40",
+        "md:w-[72vw]",
+        reduced && "hover:border-pulse/30",
       )}
     >
       {/* visor: la captura real de la portada, o el esquema del sistema */}
@@ -479,7 +676,7 @@ function ProjectCard({ item, index }: { item: ProjectItem; index: number }) {
           </div>
         )}
       </div>
-    </article>
+    </motion.article>
   );
 }
 
@@ -491,53 +688,100 @@ const TOTAL = PROJECTS.items.length;
 function Carousel() {
   const trackRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
-  const reduced = useReducedMotion();
+  const reduced = !!useReducedMotion();
 
-  /* índice activo: IntersectionObserver, no listener de scroll */
+  /** posición real del riel: de acá cuelgan TODAS las animaciones */
+  const scrollX = useMotionValue(0);
+  /** paso entre tarjetas (ancho + gap), medido del DOM */
+  const pitchRef = useRef(0);
+  /** aire final para que la última tarjeta también llegue al puesto de lectura */
+  const [tail, setTail] = useState(0);
+  const tween = useRef<{ stop: () => void } | null>(null);
+
+  /* medir el paso y el aire final; se rehace en cada resize */
   useEffect(() => {
     const track = trackRef.current;
     if (!track) return;
-    const cards = track.querySelectorAll<HTMLElement>("[data-card]");
 
-    const io = new IntersectionObserver(
-      (entries) => {
-        // la tarjeta más visible manda
-        let best: { i: number; ratio: number } | null = null;
-        for (const e of entries) {
-          if (!e.isIntersecting) continue;
-          const i = Number((e.target as HTMLElement).dataset.index);
-          if (!best || e.intersectionRatio > best.ratio) {
-            best = { i, ratio: e.intersectionRatio };
-          }
-        }
-        if (best) setActive(best.i);
-      },
-      { root: track, threshold: [0.5, 0.75, 1] },
-    );
+    const medir = () => {
+      const cards = track.querySelectorAll<HTMLElement>("[data-card]");
+      if (cards.length < 2) return;
+      pitchRef.current = cards[1].offsetLeft - cards[0].offsetLeft;
 
-    cards.forEach((c) => io.observe(c));
-    return () => io.disconnect();
-  }, []);
+      // sin este aire, la última tarjeta nunca alcanza el borde izquierdo y
+      // quedaría apagada para siempre
+      const tr = track.getBoundingClientRect();
+      const cr = cards[0].getBoundingClientRect();
+      const padIzq = cr.left - tr.left + track.scrollLeft;
+      setTail(Math.max(0, Math.round(track.clientWidth - padIzq - cr.width)));
 
-  /* mover una tarjeta (paso real medido del DOM, no un número mágico) */
-  const step = useCallback(
-    (dir: 1 | -1) => {
+      // recalcular las transformaciones ahora que el paso ya se conoce
+      scrollX.set(track.scrollLeft);
+    };
+
+    medir();
+    const ro = new ResizeObserver(medir);
+    ro.observe(track);
+    return () => ro.disconnect();
+  }, [scrollX]);
+
+  /* el índice activo sale del scroll real: nunca se desincroniza */
+  useEffect(() => {
+    return scrollX.on("change", (v) => {
+      const p = pitchRef.current;
+      if (p <= 0) return;
+      const i = Math.min(TOTAL - 1, Math.max(0, Math.round(v / p)));
+      setActive((prev) => (prev === i ? prev : i));
+    });
+  }, [scrollX]);
+
+  /* progreso continuo del riel, para la barra (arranca en 1/TOTAL) */
+  const progress = useTransform(scrollX, (v) => {
+    const track = trackRef.current;
+    const max = track ? track.scrollWidth - track.clientWidth : 0;
+    const t = max > 0 ? Math.min(1, Math.max(0, v / max)) : 0;
+    return (1 + (TOTAL - 1) * t) / TOTAL;
+  });
+
+  /* viaje a una tarjeta con la curva de la casa, no con el smooth del navegador */
+  const irA = useCallback(
+    (i: number) => {
       const track = trackRef.current;
-      if (!track) return;
-      const first = track.querySelector<HTMLElement>("[data-card]");
-      const second = track.querySelector<HTMLElement>(
-        "[data-card]:nth-of-type(2)",
-      );
-      const delta =
-        first && second
-          ? second.offsetLeft - first.offsetLeft
-          : (first?.offsetWidth ?? track.clientWidth);
-      track.scrollBy({
-        left: dir * delta,
-        behavior: reduced ? "auto" : "smooth",
+      const p = pitchRef.current;
+      if (!track || p <= 0) return;
+      const max = track.scrollWidth - track.clientWidth;
+      const destino = Math.max(0, Math.min(max, i * p));
+
+      tween.current?.stop();
+      tween.current = null;
+
+      if (reduced) {
+        track.scrollLeft = destino;
+        scrollX.set(destino);
+        return;
+      }
+
+      // el snap del navegador pelea contra la animación: se apaga mientras dura
+      track.style.scrollSnapType = "none";
+      tween.current = animate(track.scrollLeft, destino, {
+        duration: TRAVEL,
+        ease: EASE,
+        onUpdate: (v) => {
+          track.scrollLeft = v;
+          scrollX.set(v);
+        },
+        onComplete: () => {
+          track.style.scrollSnapType = "";
+          tween.current = null;
+        },
       });
     },
-    [reduced],
+    [reduced, scrollX],
+  );
+
+  const step = useCallback(
+    (dir: 1 | -1) => irA(active + dir),
+    [irA, active],
   );
 
   /* arrastre con el mouse (el táctil ya funciona nativo, no lo tocamos) */
@@ -547,6 +791,9 @@ function Carousel() {
     if (e.pointerType !== "mouse") return;
     const track = trackRef.current;
     if (!track) return;
+    // agarrar el riel corta cualquier viaje en curso
+    tween.current?.stop();
+    tween.current = null;
     drag.current = {
       active: true,
       startX: e.clientX,
@@ -563,14 +810,17 @@ function Carousel() {
     // el arrastre necesita desactivar el snap o el navegador pelea con nosotros
     if (drag.current.moved > 4) track.style.scrollSnapType = "none";
     track.scrollLeft = drag.current.startScroll - dx;
+    scrollX.set(track.scrollLeft);
   };
 
   const endDrag = () => {
     const track = trackRef.current;
     if (!drag.current.active || !track) return;
     drag.current.active = false;
-    // devolver el snap deja que el navegador acomode la tarjeta más cercana
-    track.style.scrollSnapType = "";
+    const p = pitchRef.current;
+    // al soltar, la tarjeta se acomoda con NUESTRA curva, no con el snap seco
+    if (p > 0) irA(Math.round(track.scrollLeft / p));
+    else track.style.scrollSnapType = "";
   };
 
   /* un click que en realidad fue un arrastre no debe abrir el link */
@@ -594,10 +844,10 @@ function Carousel() {
           aria-hidden
           className="relative h-px flex-1 bg-[var(--hairline)]"
         >
+          {/* la barra sigue al riel de forma continua: escala, no ancho */}
           <motion.span
-            className="absolute inset-y-0 left-0 bg-pulse"
-            animate={{ width: `${((active + 1) / TOTAL) * 100}%` }}
-            transition={reduced ? { duration: 0 } : { duration: 0.5, ease: EASE }}
+            className="absolute inset-0 origin-left bg-pulse"
+            style={{ scaleX: progress }}
           />
         </div>
 
@@ -641,17 +891,28 @@ function Carousel() {
         onPointerLeave={endDrag}
         onPointerCancel={endDrag}
         onClickCapture={onClickCapture}
+        onScroll={(e) => scrollX.set(e.currentTarget.scrollLeft)}
         className={cn(
-          "flex snap-x snap-mandatory gap-6 overflow-x-auto overscroll-x-contain pb-4",
-          "px-6 scroll-px-6 md:px-12 md:scroll-px-12 lg:pl-28 lg:scroll-pl-28 lg:pr-20",
+          "flex snap-x snap-mandatory gap-6 overflow-x-auto overscroll-x-contain py-6",
+          "px-6 scroll-px-6 md:px-12 md:scroll-px-12 lg:pl-28 lg:scroll-pl-28",
           "[scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
           "cursor-grab active:cursor-grabbing",
           "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-pulse",
         )}
       >
         {PROJECTS.items.map((item, i) => (
-          <ProjectCard key={item.id} item={item} index={i} />
+          <ProjectCard
+            key={item.id}
+            item={item}
+            index={i}
+            scrollX={scrollX}
+            pitchRef={pitchRef}
+            reduced={reduced}
+          />
         ))}
+        {/* aire final: sin esto la última tarjeta nunca llega al puesto de
+            lectura y se quedaría siempre apagada */}
+        <span aria-hidden className="flex-none" style={{ width: tail }} />
       </div>
     </div>
   );
@@ -673,96 +934,6 @@ export function Projects() {
       </div>
 
       <Carousel />
-
-      <ProjectArchive />
     </Section>
-  );
-}
-
-/* ============================================================
-   Archivo: el recorrido antes y alrededor de la plataforma.
-   Filas editoriales SIN links al código; solo linkea la demo viva.
-   ============================================================ */
-function ArchiveRowContent({
-  p,
-  linked,
-}: {
-  p: (typeof PROJECT_ARCHIVE)["items"][number];
-  linked: boolean;
-}) {
-  return (
-    <>
-      <span className="order-1 font-mono text-[12px] tracking-wide text-dim md:order-none">
-        {p.year}
-      </span>
-      <span className="col-span-2 md:col-span-1">
-        <span className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
-          <span
-            className={cn(
-              "font-display text-xl font-bold text-ink md:text-2xl",
-              linked && "transition-colors duration-300 group-hover:text-pulse",
-            )}
-          >
-            {p.name}
-          </span>
-          <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-            {p.stack.join("  /  ")}
-          </span>
-        </span>
-        <span className="mt-2 block max-w-[62ch] text-[15px] leading-relaxed text-dim">
-          {p.description}
-        </span>
-      </span>
-      {linked && (
-        <ArrowUpRight
-          aria-hidden
-          strokeWidth={1.5}
-          className="h-4 w-4 self-center text-dim transition-all duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-pulse"
-        />
-      )}
-    </>
-  );
-}
-
-function ProjectArchive() {
-  const rowClass =
-    "grid grid-cols-[1fr_auto] items-baseline gap-x-6 gap-y-2 border-b border-hairline py-7 md:grid-cols-[110px_1fr_auto]";
-
-  return (
-    <div className="mx-auto mt-28 max-w-[1400px] px-6 md:mt-36 md:px-12 lg:pl-28 lg:pr-20">
-      <Reveal>
-        <h3 className="font-display text-2xl font-bold tracking-[-0.01em] text-ink md:text-3xl">
-          {PROJECT_ARCHIVE.title}
-        </h3>
-        <p className="mt-3 max-w-[55ch] text-[15px] leading-relaxed text-dim">
-          {PROJECT_ARCHIVE.intro}
-        </p>
-      </Reveal>
-
-      <div className="mt-10 border-t border-hairline">
-        {PROJECT_ARCHIVE.items.map((p, i) => (
-          <Reveal key={p.name} delay={i * 0.08}>
-            {p.link ? (
-              <a
-                href={p.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={`Ver ${p.name} en vivo`}
-                className={cn(
-                  rowClass,
-                  "group transition-colors duration-300 hover:bg-surface/60",
-                )}
-              >
-                <ArchiveRowContent p={p} linked />
-              </a>
-            ) : (
-              <div className={rowClass}>
-                <ArchiveRowContent p={p} linked={false} />
-              </div>
-            )}
-          </Reveal>
-        ))}
-      </div>
-    </div>
   );
 }
