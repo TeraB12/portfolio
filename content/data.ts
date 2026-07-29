@@ -107,6 +107,28 @@ export const PROJECTS = {
       urlLabel: "Ver en vivo",
     },
     {
+      // OJO: esta tarjeta NO es un sistema que se le vende a un cliente. Es la
+      // consola INTERNA de Pulso, que recibe información de todos los sistemas
+      // en funcionamiento. Va en el sitio porque explica por qué el soporte es
+      // rápido, no como producto.
+      id: "gestion",
+      name: "Sistema de gestión",
+      kind: "Nuestro centro de control: todos los clientes en un mapa",
+      description:
+        "El sistema interno con el que manejamos Pulso. Cada cliente, cada proyecto, los pedidos de soporte y los cobros quedan conectados en un solo mapa, y recibe información de todos los sistemas que tenemos funcionando. Así vemos qué está pasando en cada uno y respondemos rápido.",
+      bullets: [
+        "Cada cliente y cada proyecto, conectados en un mapa",
+        "Los pedidos de soporte entran acá y se atienden por orden",
+        "Vemos el estado de cada sistema sin esperar a que nos avisen",
+      ],
+      specs: ["INTERNO", "CLIENTES", "SOPORTE", "SEGUIMIENTO"],
+      shot: "/previews/panel.webp",
+      shotAlt:
+        "Centro de control interno de Pulso, con el mapa de clientes, cobros, tickets y calendario conectados entre sí.",
+      url: null,
+      urlLabel: null,
+    },
+    {
       id: "meli",
       name: "Sistema automático Meli",
       kind: "Ventas y estadísticas de Mercado Libre en un solo lugar",
@@ -143,6 +165,24 @@ export const PROJECTS = {
       urlLabel: "Ver en vivo",
     },
     {
+      id: "elefante",
+      name: "El Paso del Elefante",
+      kind: "Sistema a medida para depósito y taller, en desarrollo",
+      description:
+        "Un sistema pensado para una operación distinta: control de depósito por racks y posiciones, tareas con cronómetro para medir el trabajo real, y cuenta corriente en pesos y en dólares. Cada módulo se activa solo para esta empresa.",
+      bullets: [
+        "Depósito por racks y posiciones",
+        "Tareas con cronómetro para medir el trabajo",
+        "Cuenta corriente en pesos y en dólares",
+      ],
+      specs: ["DEPÓSITO", "TAREAS", "PESOS Y DÓLARES"],
+      shot: "/previews/elefante.webp",
+      shotAlt:
+        "Panel a medida de El Paso del Elefante, con su centro de tareas pendientes, depósito, listas de precios y mayoristas.",
+      url: null,
+      urlLabel: null,
+    },
+    {
       id: "catalogos",
       name: "Catálogos automáticos",
       kind: "Un catálogo online propio para cada revendedor, creado solo",
@@ -176,42 +216,6 @@ export const PROJECTS = {
       shotAlt: null,
       url: "https://logiweb.catalogocba.com.ar",
       urlLabel: "Ver su catálogo",
-    },
-    {
-      id: "elefante",
-      name: "El Paso del Elefante",
-      kind: "Sistema a medida para depósito y taller, en desarrollo",
-      description:
-        "Un sistema pensado para una operación distinta: control de depósito por racks y posiciones, tareas con cronómetro para medir el trabajo real, y cuenta corriente en pesos y en dólares. Cada módulo se activa solo para esta empresa.",
-      bullets: [
-        "Depósito por racks y posiciones",
-        "Tareas con cronómetro para medir el trabajo",
-        "Cuenta corriente en pesos y en dólares",
-      ],
-      specs: ["DEPÓSITO", "TAREAS", "PESOS Y DÓLARES"],
-      shot: "/previews/elefante.webp",
-      shotAlt:
-        "Panel a medida de El Paso del Elefante, con su centro de tareas pendientes, depósito, listas de precios y mayoristas.",
-      url: null,
-      urlLabel: null,
-    },
-    {
-      id: "gestion",
-      name: "Sistema de gestión",
-      kind: "El centro de operaciones de una empresa, hecho para cómo trabaja",
-      description:
-        "Ventas, stock, compras, caja, facturación, clientes y reportes en una sola pantalla. Cada empresa recibe el suyo, con su dominio, su marca y sus reglas: no es un programa enlatado al que haya que adaptarse.",
-      bullets: [
-        "Cada empresa con su sistema, su dominio y sus datos",
-        "Permisos por puesto de trabajo",
-        "Mejoras y soporte todas las semanas",
-      ],
-      specs: ["GESTIÓN", "PUNTO DE VENTA", "AFIP", "REPORTES"],
-      shot: "/previews/panel.webp",
-      shotAlt:
-        "Centro de control del sistema, con el mapa de clientes, cobros, tickets y calendario conectados entre sí.",
-      url: null,
-      urlLabel: null,
     },
     {
       id: "asistente",
