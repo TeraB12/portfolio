@@ -85,28 +85,9 @@ export const PROJECTS = {
   intro:
     "No mostramos maquetas: cada tarjeta es un sistema que hoy está funcionando en una empresa real. Deslizá para verlos todos.",
   hint: "Deslizá para ver todos",
+  // ORDEN: primero las tarjetas que tienen captura real; los proyectos sin
+  // foto (que caen al esquema SVG) van después.
   items: [
-    {
-      id: "gestion",
-      name: "Sistema de gestión a medida",
-      kind: "El centro de operaciones de una empresa, hecho para cómo trabaja",
-      description:
-        "Ventas, stock, compras, caja, facturación, clientes y reportes en una sola pantalla. Cada empresa recibe el suyo, con su dominio, su marca y sus reglas: no es un programa enlatado al que haya que adaptarse.",
-      bullets: [
-        "Cada empresa con su sistema, su dominio y sus datos",
-        "Permisos por puesto de trabajo",
-        "Mejoras y soporte todas las semanas",
-      ],
-      specs: ["GESTIÓN", "PUNTO DE VENTA", "AFIP", "REPORTES"],
-      // PENDIENTE: captura del centro de control (la vista de red del inicio).
-      // Cuando el archivo esté en public/previews/panel.webp, poner acá esa
-      // ruta y la tarjeta cambia sola del esquema a la foto real.
-      shot: null,
-      shotAlt:
-        "Centro de control del sistema de gestión, con el mapa de proyectos, comercios y cobros conectados.",
-      url: null,
-      urlLabel: null,
-    },
     {
       id: "mya",
       name: "MyA Importaciones",
@@ -123,6 +104,42 @@ export const PROJECTS = {
       shotAlt:
         "Portada de la tienda online de MyA Importaciones, con su buscador, sus categorías y sus promociones.",
       url: "https://myaimportaciones.com.ar",
+      urlLabel: "Ver en vivo",
+    },
+    {
+      id: "meli",
+      name: "Sistema automático Meli",
+      kind: "Ventas y estadísticas de Mercado Libre en un solo lugar",
+      description:
+        "La pantalla donde una empresa maneja todas sus ventas y estadísticas de Mercado Libre sin entrar cuenta por cuenta, con varias cuentas y varias empresas conviviendo a la vez.",
+      bullets: [
+        "Varias cuentas manejadas sin entrar una por una",
+        "Ingresos, ganancia y margen calculados solos",
+        "Varias empresas, cada una con su operación",
+      ],
+      specs: ["MERCADO LIBRE", "VARIAS CUENTAS", "ESTADÍSTICAS"],
+      shot: "/previews/meli.webp",
+      shotAlt:
+        "Panel de reportes del sistema Meli, con ingresos, ganancia, margen y el detalle por cada empresa.",
+      url: null,
+      urlLabel: null,
+    },
+    {
+      id: "evolux",
+      name: "Evolux",
+      kind: "Web a medida para una agencia especialista en Mercado Libre",
+      description:
+        "Diseño y desarrollo de la web institucional de Evolux, la agencia que escala marcas dentro de Mercado Libre: su propuesta, sus servicios, sus resultados y la captación de nuevos clientes.",
+      bullets: [
+        "Diseño y desarrollo hechos de cero para ellos",
+        "Pensada para captar consultas, no solo para mostrar",
+        "Carga rápida y lista para publicidad",
+      ],
+      specs: ["WEB INSTITUCIONAL", "CAPTACIÓN", "DISEÑO PROPIO"],
+      shot: "/previews/evolux.webp",
+      shotAlt:
+        "Portada de la web de Evolux, agencia especialista en Mercado Libre, con su titular y sus métricas.",
+      url: "https://evolux-rouge.vercel.app",
       urlLabel: "Ver en vivo",
     },
     {
@@ -172,45 +189,29 @@ export const PROJECTS = {
         "Cuenta corriente en pesos y en dólares",
       ],
       specs: ["DEPÓSITO", "TAREAS", "PESOS Y DÓLARES"],
-      shot: null,
-      shotAlt: null,
-      url: null,
-      urlLabel: null,
-    },
-    {
-      id: "meli",
-      name: "Sistema automático Meli",
-      kind: "Ventas y estadísticas de Mercado Libre en un solo lugar",
-      description:
-        "La pantalla donde una empresa maneja todas sus ventas y estadísticas de Mercado Libre sin entrar cuenta por cuenta, con varias cuentas y varias empresas conviviendo a la vez.",
-      bullets: [
-        "Varias cuentas manejadas sin entrar una por una",
-        "Ventas y números claros para decidir con datos",
-        "Varias empresas, cada una con su operación",
-      ],
-      specs: ["MERCADO LIBRE", "VARIAS CUENTAS", "ESTADÍSTICAS"],
-      shot: null,
-      shotAlt: null,
-      url: null,
-      urlLabel: null,
-    },
-    {
-      id: "evolux",
-      name: "Evolux",
-      kind: "Web a medida para una agencia especialista en Mercado Libre",
-      description:
-        "Diseño y desarrollo de la web institucional de Evolux, la agencia que escala marcas dentro de Mercado Libre: su propuesta, sus servicios, sus resultados y la captación de nuevos clientes.",
-      bullets: [
-        "Diseño y desarrollo hechos de cero para ellos",
-        "Pensada para captar consultas, no solo para mostrar",
-        "Carga rápida y lista para publicidad",
-      ],
-      specs: ["WEB INSTITUCIONAL", "CAPTACIÓN", "DISEÑO PROPIO"],
-      shot: "/previews/evolux.webp",
+      shot: "/previews/elefante.webp",
       shotAlt:
-        "Portada de la web de Evolux, agencia especialista en Mercado Libre, con su titular y sus métricas.",
-      url: "https://evolux-rouge.vercel.app",
-      urlLabel: "Ver en vivo",
+        "Panel a medida de El Paso del Elefante, con su centro de tareas pendientes, depósito, listas de precios y mayoristas.",
+      url: null,
+      urlLabel: null,
+    },
+    {
+      id: "gestion",
+      name: "Sistema de gestión",
+      kind: "El centro de operaciones de una empresa, hecho para cómo trabaja",
+      description:
+        "Ventas, stock, compras, caja, facturación, clientes y reportes en una sola pantalla. Cada empresa recibe el suyo, con su dominio, su marca y sus reglas: no es un programa enlatado al que haya que adaptarse.",
+      bullets: [
+        "Cada empresa con su sistema, su dominio y sus datos",
+        "Permisos por puesto de trabajo",
+        "Mejoras y soporte todas las semanas",
+      ],
+      specs: ["GESTIÓN", "PUNTO DE VENTA", "AFIP", "REPORTES"],
+      shot: "/previews/panel.webp",
+      shotAlt:
+        "Centro de control del sistema, con el mapa de clientes, cobros, tickets y calendario conectados entre sí.",
+      url: null,
+      urlLabel: null,
     },
     {
       id: "asistente",
