@@ -8,7 +8,6 @@ import { Skills } from "@/components/sections/Skills";
 import { Stack } from "@/components/sections/Stack";
 import { FavoriteTech } from "@/components/sections/FavoriteTech";
 import { Timeline } from "@/components/sections/Timeline";
-import { Testimonials } from "@/components/sections/Testimonials";
 import { Contact } from "@/components/sections/Contact";
 import { Footer } from "@/components/sections/Footer";
 
@@ -31,7 +30,6 @@ export default function Home() {
       <Stack />
       <FavoriteTech />
       <Timeline />
-      <Testimonials />
       <Contact />
       <Footer />
     </main>

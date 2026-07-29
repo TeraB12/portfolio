@@ -69,7 +69,6 @@ export const WAYPOINTS = [
   { id: "stack", label: "HERRAMIENTAS" },
   { id: "tecnologias", label: "POR QUÉ" },
   { id: "historia", label: "LA HISTORIA" },
-  { id: "testimonios", label: "TESTIMONIOS" },
   { id: "contacto", label: "CONTACTO" },
 ] as const;
 
@@ -596,17 +595,9 @@ export const TIMELINE = {
   ],
 } as const;
 
-export const TESTIMONIALS = {
-  title: "Testimonios",
-  // Todavía no hay testimonios escritos, así que en vez de un hueco mostramos
-  // PRUEBA real y verificable: clientes operando y sus revendedores activos.
-  proof: {
-    label: "SEÑAL RECIBIDA",
-    text: "Los números hablan antes que las palabras: MyA Importaciones maneja todo su día a día con el sistema desde junio de 2026, y ya tiene 4 revendedores con su propio catálogo publicado. Los testimonios escritos van a aparecer acá cuando los clientes quieran contarlo.",
-    ctaLabel: "Ver la tienda en vivo",
-    ctaHref: "https://myaimportaciones.com.ar",
-  },
-} as const;
+// Testimonios se eliminó el 2026-07-29: la prueba ya la dan los proyectos, que
+// muestran clientes reales con nombre y captura. Una sección de testimonios sin
+// testimonios escritos era un hueco, no un argumento.
 
 export const CONTACT = {
   eyebrow: "INICIAR TRANSMISIÓN",

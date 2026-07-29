@@ -3,7 +3,7 @@
 > **Concepto:** el sitio no es un portfolio, es un organismo de software vivo. Todo el sitio
 > comparte un único reloj cardíaco global (un latido cada ~4.5s) que se propaga por una señal
 > continua: nace horizontal en el hero como electrocardiograma y baja como columna vertebral
-> (spine) por el margen izquierdo durante las 12 secciones. La telemetría es honesta: uptime
+> (spine) por el margen izquierdo durante las 11 secciones. La telemetría es honesta: uptime
 > real de la sesión, hora real de Córdoba, datos reales de la plataforma en producción.
 > **Mensaje en 5 segundos:** "esta empresa no hace demos; opera sistemas que respiran."
 
@@ -120,10 +120,11 @@ Un solo reloj para TODO el sitio. Nada late por su cuenta.
 - Punto medio `·` máximo 1 por línea, solo en strips de telemetría mono.
 - Números reales solamente (2.300+ productos de MyA, 6 integraciones, etc.). Nada inventado.
 - Sin numeración de secciones ("01 / TRABAJO" prohibido). Sin "scroll para explorar".
-- Testimonios: NO inventar. Tratamiento "ZONA SIN RELEVAR": achurado diagonal sutil + texto
-  honesto ("Los primeros clientes están operando; sus palabras van a aparecer acá.").
+- Testimonios: la sección se eliminó (2026-07-29). La prueba la dan los proyectos, que muestran
+  clientes reales con nombre y captura. Si algún día hay testimonios escritos, van con nombre y
+  empresa; NO se inventan ni se rellenan con un placeholder.
 
-## 8. Las 12 secciones (familia de layout + motion motivado)
+## 8. Las 11 secciones (familia de layout + motion motivado)
 
 El orden vende en este orden: primero la PRUEBA (proyectos funcionando), después qué vendemos
 y cómo trabajamos, y recién entonces quiénes somos. `app/page.tsx` y `WAYPOINTS` en
@@ -141,8 +142,7 @@ y cómo trabajamos, y recién entonces quiénes somos. `app/page.tsx` y `WAYPOIN
 | 8 | Herramientas | `stack` | `Stack.tsx` | Banda horizontal full-bleed tipo bahía de racks: módulos rectangulares, nombre mono, LED. Scroll-snap horizontal contenido en la franja | Boot sequence: LEDs encienden en secuencia al entrar; después laten con el reloj global en offsets |
 | 9 | Por qué | `tecnologias` | `FavoriteTech.tsx` | Índice tipográfico gigante: palabras enormes en outline que se llenan de ámbar al hover; panel lateral fijo mono con el porqué honesto | Fill con clip-path al hover + crossfade del panel |
 | 10 | La historia | `historia` | `Timeline.tsx` | La línea pasa AL CENTRO: hitos alternados izq/der como eventos de log con timestamp mono | Scrub ScrollTrigger: el latido viaja por la línea y enciende cada hito al llegar |
-| 11 | Testimonios | `testimonios` | `Testimonials.tsx` | Cita monumental única centrada. Placeholder honesto "ZONA SIN RELEVAR" con achurado diagonal | Transición por blur + 12px de desplazamiento |
-| 12 | Contacto | `contacto` | `Contact.tsx` | **El cotizador**: título grande + form en 2 columnas (campos izq, contexto der), CTA "Enviar por WhatsApp" | El latido se acelera con cada campo completado (setRate); submit = golpe de matriz + abre wa.me |
+| 11 | Contacto | `contacto` | `Contact.tsx` | **El cotizador**: título grande + form en 2 columnas (campos izq, contexto der), CTA "Enviar por WhatsApp" | El latido se acelera con cada campo completado (setRate); submit = golpe de matriz + abre wa.me |
 
 **Trayectoria (`Experience.tsx`) se eliminó** el 2026-07-29: una tabla de experiencia laboral es
 lenguaje de portfolio personal, no de empresa. Lo que valía de ahí (los hitos) vive en La
@@ -155,8 +155,8 @@ cuota de Image Optimization de Vercel en reoptimizar. Para cambiar una, reemplaz
 con el mismo nombre. Para que una tarjeta vuelva al esquema SVG, poner `shot: null` en `PROJECTS`.
 
 Familias usadas: editorial-monumental, carrusel-instrumento, split-asimétrico, constelación-SVG,
-banda-racks, timeline-central, grid-asimétrico, índice-tipográfico, dossier, cita-monumental,
-form-2col, status-bar → 12 layouts, cero repetición.
+banda-racks, timeline-central, grid-asimétrico, índice-tipográfico, dossier, form-2col,
+status-bar → 11 layouts, cero repetición.
 
 ## 9. Contacto: el cotizador (requisito del cliente)
 
