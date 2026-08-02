@@ -1,232 +1,132 @@
 "use client";
 
+import { useEffect, useRef } from "react";
+import { HeroPulse } from "@/components/signal/HeroPulse";
+import { Cta } from "@/components/ui/Cta";
+import { HERO } from "@/content/data";
+import { rd } from "@/lib/utils";
+
 /**
- * PULSO · Hero (id "inicio"): el sistema hace boot ante tus ojos.
- *
- * Coreografía: el ECG se dibuja (HeroSignal), y las letras del nombre se
- * resuelven justo cuando el primer latido global cruza debajo (delay =
- * bootDelaySeconds() + FIRST_BEAT_MS + 0.2). Después llegan tagline, CTAs y
- * la telemetría honesta. Todo animado on-mount (es un boot, no un reveal de
- * scroll). Con prefers-reduced-motion: todo estático y legible.
- *
- * Hero stack (máx 4 elementos de texto): telemetría, nombre, subtítulo, CTAs.
+ * El hero: el pulso 3D atrás, un scrim radial para que el texto se lea y el
+ * contenido apoyado abajo. Al scrollear el canvas se va más lento que la
+ * página y el texto se desvanece: la profundidad la da el desfasaje.
  */
-
-import { useMemo, type MouseEvent, type ReactNode } from "react";
-import { motion, useReducedMotion } from "motion/react";
-import { HERO, COMPANY, NAV } from "@/content/data";
-import { bootDelaySeconds } from "@/lib/boot";
-import { EASE } from "@/lib/motion";
-import { PULSE_TIMING } from "@/lib/pulse";
-import { scrollToHash } from "@/lib/scroll";
-import { useUptime } from "@/lib/telemetry";
-import { HeroSignal } from "@/components/signal/HeroSignal";
-import { ButtonLink } from "@/components/ui/Button";
-import { Led } from "@/components/ui/Led";
-
-/** stagger entre letras del nombre */
-const LETTER_STAGGER = 0.045;
-
-/** margen izquierdo del hero: px-6 en mobile, 6vw en md, carril de spine en lg */
-const LEFT_RAIL = "pl-6 md:pl-[6vw] lg:pl-[max(6vw,6.5rem)]";
-
-/** una línea del nombre, letra por letra: rise 24px + blur 8→0 */
-function BootLetters({
-  text,
-  from,
-  base,
-  reduced,
-}: {
-  text: string;
-  /** índice acumulado para que la cascada continúe entre líneas */
-  from: number;
-  base: number;
-  reduced: boolean;
-}) {
-  return (
-    <span aria-hidden className="block">
-      {text.split("").map((ch, i) => (
-        <motion.span
-          key={`${ch}-${i}`}
-          className="inline-block will-change-transform"
-          initial={reduced ? false : { opacity: 0, y: 24, filter: "blur(8px)" }}
-          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-          transition={
-            reduced
-              ? { duration: 0 }
-              : {
-                  duration: 0.7,
-                  ease: EASE,
-                  delay: base + (from + i) * LETTER_STAGGER,
-                }
-          }
-        >
-          {ch}
-        </motion.span>
-      ))}
-    </span>
-  );
-}
-
-/** fade + rise del boot (on-mount, con delay coreografiado) */
-function BootRise({
-  delay,
-  reduced,
-  className,
-  children,
-}: {
-  delay: number;
-  reduced: boolean;
-  className?: string;
-  children: ReactNode;
-}) {
-  return (
-    <motion.div
-      className={className}
-      initial={reduced ? false : { opacity: 0, y: 24, filter: "blur(8px)" }}
-      animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-      transition={
-        reduced ? { duration: 0 } : { duration: 0.7, ease: EASE, delay }
-      }
-    >
-      {children}
-    </motion.div>
-  );
-}
-
-/** hoja del uptime: solo este nodo re-renderiza por segundo (en mobile está oculto) */
-function UptimeReadout() {
-  const uptime = useUptime();
-  return (
-    <p className="hidden text-dim tabular-nums md:block">
-      {`UPTIME ${uptime || "00:00:00"}`}
-    </p>
-  );
-}
-
-/** resalta la palabra clave del tagline en peso 700 */
-function Keyword({ text, word }: { text: string; word: string }) {
-  const at = text.indexOf(word);
-  if (at < 0) return <>{text}</>;
-  return (
-    <>
-      {text.slice(0, at)}
-      <b className="font-bold">{word}</b>
-      {text.slice(at + word.length)}
-    </>
-  );
-}
-
 export function Hero() {
-  const reduced = !!useReducedMotion();
+  const layer = useRef<HTMLDivElement>(null);
+  const inner = useRef<HTMLDivElement>(null);
 
-  /** las letras se resuelven cuando el primer latido cruza debajo del nombre */
-  const base = useMemo(
-    () => bootDelaySeconds() + PULSE_TIMING.FIRST_BEAT_MS / 1000 + 0.2,
-    [],
-  );
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-  const go = (hash: string) => (e: MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
-    scrollToHash(hash);
-  };
+    let queued = false;
+    const apply = () => {
+      queued = false;
+      const y = window.scrollY;
+      if (layer.current) {
+        layer.current.style.transform = `translate3d(0,${(y * 0.24).toFixed(1)}px,0)`;
+      }
+      if (inner.current) {
+        inner.current.style.transform = `translate3d(0,${(y * 0.09).toFixed(1)}px,0)`;
+        inner.current.style.opacity = Math.max(0, 1 - y / 620).toFixed(3);
+      }
+    };
+    const onScroll = () => {
+      if (queued) return;
+      queued = true;
+      requestAnimationFrame(apply);
+    };
+
+    apply();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
     <section
       id="inicio"
-      className="relative flex min-h-[100svh] flex-col overflow-hidden pt-16 md:block"
+      className="relative flex min-h-[92vh] items-end pt-[132px]"
     >
-      {/* capa fondo (solo md+): el electrocardiograma a pantalla completa.
-          En mobile el ECG vive como franja EN FLUJO entre el nombre y el texto:
-          así jamás puede pisar la tipografía, mida lo que mida la pantalla. */}
-      <div aria-hidden className="absolute inset-0 hidden md:block">
-        <HeroSignal yRatio={0.62} />
+      <div ref={layer} className="absolute inset-0">
+        <HeroPulse />
       </div>
 
-      {/* telemetría honesta: el único bloque mono del hero */}
-      <motion.div
-        className="mono-label absolute right-6 top-24 z-10 space-y-1.5 text-right md:right-12"
-        initial={reduced ? false : { opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={
-          reduced
-            ? { duration: 0 }
-            : { duration: 0.8, ease: EASE, delay: base + 1.25 }
-        }
-      >
-        <p className="flex items-center justify-end gap-2">
-          <Led />
-          <span className="text-pulse">{NAV.statusLabel}</span>
-        </p>
-        <p className="text-dim">{COMPANY.locationShort}</p>
-        <UptimeReadout />
-      </motion.div>
-
-      {/* marca monumental, por encima del canvas */}
-      <div className={`relative z-10 pt-[7vh] md:pt-[9vh] ${LEFT_RAIL}`}>
-        <h1
-          aria-label={`${COMPANY.name}, ${COMPANY.descriptor}`}
-          className="font-display text-[clamp(4.5rem,11vw,9.5rem)] font-extrabold uppercase leading-[0.9] tracking-[-0.03em] text-ink max-[374px]:text-[3.5rem]"
-        >
-          <BootLetters
-            text={COMPANY.wordmarkTop}
-            from={0}
-            base={base}
-            reduced={reduced}
-          />
-          <BootLetters
-            text={COMPANY.wordmarkBottom}
-            from={COMPANY.wordmarkTop.length}
-            base={base}
-            reduced={reduced}
-          />
-        </h1>
-      </div>
-
-      {/* mobile: la señal como franja propia, "subrayando" el nombre */}
-      <div aria-hidden className="relative mt-10 h-20 w-full md:hidden">
-        <HeroSignal yRatio={0.5} />
-      </div>
-
-      {/* debajo de la línea del ECG: tagline + subline + CTAs.
-          Mobile: en flujo, empujado hacia abajo (mt-auto). Desktop: absoluto,
-          anclado abajo o al 66% según la altura real del viewport. */}
+      {/* scrim: sin esto el titular pelea contra el pulso */}
       <div
-        className={`relative z-10 mt-auto pb-10 pr-6 md:absolute md:inset-x-0 md:bottom-6 md:mt-0 md:pb-0 md:pr-12 [@media(min-width:768px)_and_(min-height:760px)]:bottom-auto [@media(min-width:768px)_and_(min-height:760px)]:top-[66%] ${LEFT_RAIL}`}
+        aria-hidden
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(115% 80% at 8% 42%, rgba(10,10,8,0.94) 0%, rgba(10,10,8,0.72) 38%, rgba(10,10,8,0) 72%)",
+        }}
+      />
+      {/* hairline dorada: alto FIJO en px, con % atraviesa el titular en
+          pantallas bajas */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute left-[38%] top-0 h-[104px] w-px"
+        style={{
+          background:
+            "linear-gradient(180deg,rgba(233,178,62,0.42) 0%,rgba(233,178,62,0) 100%)",
+        }}
+      />
+
+      <div
+        ref={inner}
+        className="shell relative w-full pb-[clamp(56px,7vw,96px)]"
       >
-        <BootRise delay={base + 0.75} reduced={reduced}>
-          <p className="text-base text-ink sm:text-lg md:text-xl">
-            <Keyword text={COMPANY.heroTagline} word="a medida" />
-          </p>
-        </BootRise>
-
-        <BootRise delay={base + 0.9} reduced={reduced}>
-          <p className="mt-3 max-w-[52ch] text-[15px] leading-relaxed text-dim md:text-[17px]">
-            {COMPANY.heroSubline}
-          </p>
-        </BootRise>
-
-        <BootRise
-          delay={base + 1.05}
-          reduced={reduced}
-          className="mt-7 flex flex-col gap-4 sm:flex-row"
+        <div
+          data-reveal="rise"
+          style={rd(220)}
+          className="mb-[clamp(24px,3vw,38px)] flex items-center gap-3"
         >
-          <ButtonLink
-            href="#contacto"
-            onClick={go("#contacto")}
-            className="w-full sm:w-auto"
+          <span aria-hidden className="h-px w-[34px] bg-accent" />
+          <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-ink-60">
+            {HERO.eyebrow}
+          </span>
+        </div>
+
+        <h1
+          data-reveal="mask"
+          style={rd(340)}
+          className="t-h1 max-w-[16ch] text-balance"
+        >
+          {HERO.titleTop[0]}
+          <br />
+          {HERO.titleTop[1]}
+          <span className="block text-ink-50">{HERO.titleBottom}</span>
+        </h1>
+
+        <div className="mt-[clamp(32px,4vw,52px)] flex flex-wrap items-end gap-[clamp(28px,5vw,72px)]">
+          <p
+            data-reveal="rise"
+            style={rd(460)}
+            className="max-w-[46ch] text-[clamp(16px,1.35vw,19px)] leading-[1.55] text-ink-70"
           >
-            {HERO.ctaPrimary}
-          </ButtonLink>
-          <ButtonLink
-            variant="ghost"
-            href="#proyectos"
-            onClick={go("#proyectos")}
-            className="w-full sm:w-auto"
+            {HERO.intro}
+          </p>
+          <div
+            data-reveal="rise"
+            style={rd(580)}
+            className="flex flex-wrap gap-3"
           >
-            {HERO.ctaSecondary}
-          </ButtonLink>
-        </BootRise>
+            <Cta
+              href={HERO.ctaPrimary.href}
+              magnetic
+              arrow
+              className="px-[26px] py-[17px] text-[14px] tracking-[-0.01em]"
+            >
+              {HERO.ctaPrimary.label}
+            </Cta>
+            <Cta
+              href={HERO.ctaSecondary.href}
+              variant="outline"
+              magnetic
+              className="px-[26px] py-[17px] text-[14px]"
+            >
+              {HERO.ctaSecondary.label}
+            </Cta>
+          </div>
+        </div>
       </div>
     </section>
   );

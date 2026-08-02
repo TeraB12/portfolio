@@ -1,38 +1,34 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { motion, useMotionValue, useSpring } from "motion/react";
+import { useEffect, useRef, useState } from "react";
 
-const INTERACTIVE =
-  'a, button, input, select, textarea, label, [role="button"], [data-cursor]';
+const INTERACTIVE = "a, button, input, select, textarea, [data-magnetic]";
 
 /**
- * Cursor de instrumento: punto ámbar preciso + anillo con física + glow ambiental.
- * Solo en punteros finos; con reduced-motion o touch vuelve el cursor nativo.
+ * Cursor de instrumento: un punto dorado de 5px que sigue exacto y un anillo
+ * de 32px que llega con retraso (lerp 0.16). Sobre cualquier control el anillo
+ * escala a 1.85, sube el alfa del borde y se llena apenas.
+ *
+ * El cursor NATIVO se mantiene visible a propósito: esto acompaña, no
+ * reemplaza, y así no se pierde el feedback del sistema (I-beam en los campos,
+ * mano en los links).
+ *
+ * Solo con puntero fino y sin prefers-reduced-motion.
  */
 export function CustomCursor() {
   const [active, setActive] = useState(false);
-  const [hovering, setHovering] = useState(false);
-  const [seen, setSeen] = useState(false);
-
-  const x = useMotionValue(-100);
-  const y = useMotionValue(-100);
-  const ringX = useSpring(x, { stiffness: 320, damping: 26 });
-  const ringY = useSpring(y, { stiffness: 320, damping: 26 });
-  const glowX = useSpring(x, { stiffness: 60, damping: 22 });
-  const glowY = useSpring(y, { stiffness: 60, damping: 22 });
+  const ring = useRef<HTMLDivElement>(null);
+  const dot = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const fine = window.matchMedia("(pointer: fine)");
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
+    // gate post-hidratación intencional: el server no sabe qué puntero hay
     const update = () => setActive(fine.matches && !reduced.matches);
 
-    // gate post-hidratación intencional: el server renderiza null y recién acá
-    // sabemos si el dispositivo tiene puntero fino (un solo re-render al montar)
     update();
     fine.addEventListener("change", update);
     reduced.addEventListener("change", update);
-
     return () => {
       fine.removeEventListener("change", update);
       reduced.removeEventListener("change", update);
@@ -41,75 +37,70 @@ export function CustomCursor() {
 
   useEffect(() => {
     if (!active) return;
+    const r = ring.current;
+    const d = dot.current;
+    if (!r || !d) return;
 
-    document.documentElement.classList.add("cursor-custom");
+    let tx = -200;
+    let ty = -200;
+    let rx = -200;
+    let ry = -200;
+    let scale = 1;
+    let target = 1;
+    let shown = false;
 
-    const onMove = (e: PointerEvent) => {
-      x.set(e.clientX);
-      y.set(e.clientY);
-      setSeen(true);
+    const onMove = (e: MouseEvent) => {
+      tx = e.clientX;
+      ty = e.clientY;
+      if (!shown) {
+        shown = true;
+        r.style.opacity = "1";
+        d.style.opacity = "1";
+      }
     };
-    const onOver = (e: PointerEvent) => {
-      const t = e.target as Element | null;
-      setHovering(!!t?.closest?.(INTERACTIVE));
-    };
-    const onLeave = () => setSeen(false);
-    const onEnter = () => setSeen(true);
 
-    window.addEventListener("pointermove", onMove, { passive: true });
-    window.addEventListener("pointerover", onOver, { passive: true });
-    document.documentElement.addEventListener("pointerleave", onLeave);
-    document.documentElement.addEventListener("pointerenter", onEnter);
+    const onOver = (e: MouseEvent) => {
+      const el = e.target as Element | null;
+      const hit = !!el?.closest?.(INTERACTIVE);
+      target = hit ? 1.85 : 1;
+      r.style.backgroundColor = hit ? "rgba(233,178,62,0.12)" : "transparent";
+      r.style.borderColor = hit
+        ? "rgba(233,178,62,0.8)"
+        : "rgba(233,178,62,0.5)";
+    };
+
+    let raf = requestAnimationFrame(function loop() {
+      raf = requestAnimationFrame(loop);
+      rx += (tx - rx) * 0.16;
+      ry += (ty - ry) * 0.16;
+      scale += (target - scale) * 0.12;
+      r.style.transform = `translate3d(${rx - 16}px,${ry - 16}px,0) scale(${scale.toFixed(3)})`;
+      d.style.transform = `translate3d(${tx - 2.5}px,${ty - 2.5}px,0)`;
+    });
+
+    window.addEventListener("mousemove", onMove, { passive: true });
+    document.addEventListener("mouseover", onOver, { passive: true });
 
     return () => {
-      document.documentElement.classList.remove("cursor-custom");
-      window.removeEventListener("pointermove", onMove);
-      window.removeEventListener("pointerover", onOver);
-      document.documentElement.removeEventListener("pointerleave", onLeave);
-      document.documentElement.removeEventListener("pointerenter", onEnter);
+      cancelAnimationFrame(raf);
+      window.removeEventListener("mousemove", onMove);
+      document.removeEventListener("mouseover", onOver);
     };
-  }, [active, x, y]);
+  }, [active]);
 
   if (!active) return null;
 
   return (
-    <div aria-hidden className="pointer-events-none fixed inset-0 z-50">
-      {/* glow ambiental: el sistema siente al visitante */}
-      <motion.div
-        className="absolute h-[520px] w-[520px] rounded-full"
-        style={{
-          x: glowX,
-          y: glowY,
-          translateX: "-50%",
-          translateY: "-50%",
-          background:
-            "radial-gradient(closest-side, rgba(255,180,84,0.05), transparent 70%)",
-          opacity: seen ? 1 : 0,
-        }}
+    <div aria-hidden>
+      <div
+        ref={ring}
+        className="pointer-events-none fixed left-0 top-0 z-[200] h-8 w-8 rounded-full border border-[rgba(233,178,62,0.5)] opacity-0 transition-[opacity,background-color,border-color] duration-[350ms]"
+        style={{ transform: "translate3d(-200px,-200px,0)" }}
       />
-      {/* anillo con física */}
-      <motion.div
-        className="absolute h-7 w-7 rounded-full border border-pulse/50"
-        style={{ x: ringX, y: ringY, translateX: "-50%", translateY: "-50%" }}
-        animate={{
-          scale: hovering ? 1.6 : 1,
-          backgroundColor: hovering
-            ? "rgba(255,180,84,0.12)"
-            : "rgba(255,180,84,0)",
-          opacity: seen ? 1 : 0,
-        }}
-        transition={{ type: "spring", stiffness: 300, damping: 22 }}
-      />
-      {/* punto preciso */}
-      <motion.div
-        className="absolute h-1 w-1 rounded-full bg-pulse"
-        style={{
-          x,
-          y,
-          translateX: "-50%",
-          translateY: "-50%",
-          opacity: seen ? 1 : 0,
-        }}
+      <div
+        ref={dot}
+        className="pointer-events-none fixed left-0 top-0 z-[201] h-[5px] w-[5px] rounded-full bg-accent opacity-0 transition-opacity duration-[350ms]"
+        style={{ transform: "translate3d(-200px,-200px,0)" }}
       />
     </div>
   );

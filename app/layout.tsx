@@ -1,41 +1,29 @@
 import type { Metadata, Viewport } from "next";
-import localFont from "next/font/local";
-import { IBM_Plex_Mono } from "next/font/google";
+import { Archivo, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
 import { SEO, COMPANY } from "@/content/data";
-import { PulseProvider } from "@/lib/pulse";
 import { LenisProvider } from "@/components/chrome/LenisProvider";
-import { Preloader } from "@/components/chrome/Preloader";
-import { Noise } from "@/components/chrome/Noise";
+import { RevealObserver } from "@/components/chrome/RevealObserver";
 import { CustomCursor } from "@/components/chrome/CustomCursor";
-import { Nav } from "@/components/chrome/Nav";
-import { SpineRail } from "@/components/signal/SpineRail";
+import { Header } from "@/components/chrome/Header";
 
-const cabinet = localFont({
-  src: [
-    { path: "./fonts/cabinet-grotesk-500.woff2", weight: "500" },
-    { path: "./fonts/cabinet-grotesk-700.woff2", weight: "700" },
-    { path: "./fonts/cabinet-grotesk-800.woff2", weight: "800" },
-  ],
-  variable: "--font-cabinet",
-  display: "swap",
-});
-
-const satoshi = localFont({
-  src: [
-    { path: "./fonts/satoshi-400.woff2", weight: "400" },
-    { path: "./fonts/satoshi-500.woff2", weight: "500" },
-    { path: "./fonts/satoshi-700.woff2", weight: "700" },
-  ],
-  variable: "--font-satoshi",
-  display: "swap",
-});
-
-const plexMono = IBM_Plex_Mono({
-  weight: ["400", "500"],
+/**
+ * Dos familias y nada más: Archivo para todo lo que se lee y JetBrains Mono
+ * para lo que es dato, estado o etiqueta. Sin serif y sin cursivas en ningún
+ * lado (se sacaron a pedido).
+ */
+const archivo = Archivo({
   subsets: ["latin"],
-  variable: "--font-plex",
+  weight: ["400", "500", "600", "700", "800"],
+  variable: "--font-archivo",
+  display: "swap",
+});
+
+const jetbrains = JetBrains_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  variable: "--font-jetbrains",
   display: "swap",
 });
 
@@ -83,40 +71,24 @@ export const viewport: Viewport = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
   return (
     <html
       lang="es"
-      className={`${cabinet.variable} ${satoshi.variable} ${plexMono.variable} antialiased`}
-      // el script de boot muta data-booted en <html> ANTES de hidratar (a propósito)
-      suppressHydrationWarning
+      className={`${archivo.variable} ${jetbrains.variable} antialiased`}
     >
-      <body className="min-h-screen bg-bg font-sans text-ink">
-        {/* gate del preloader ANTES del primer paint: en revisitas de la misma
-            sesión (o con reduced-motion) el overlay ni se muestra */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html:
-              "try{if(sessionStorage.getItem('pulso-boot')==='1'||matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.dataset.booted='1'}catch(e){document.documentElement.dataset.booted='1'}",
-          }}
-        />
-        {/* sin JS, motion deja todo en su estado initial (opacity 0): forzar
-            visibilidad y esconder el preloader */}
+      <body>
+        {/* sin JS los reveals se quedarían en su estado inicial (invisibles):
+            acá se anulan de una */}
         <noscript>
-          <style>{`[data-preloader]{display:none!important}body [style]{opacity:1!important;transform:none!important;filter:none!important;clip-path:none!important}`}</style>
+          <style>{`[data-reveal],[data-reveal]>*{opacity:1!important;transform:none!important;filter:none!important;clip-path:none!important}`}</style>
         </noscript>
-        <PulseProvider>
-          <LenisProvider>
-            <Preloader />
-            <Noise />
-            <CustomCursor />
-            <Nav />
-            <SpineRail />
-            {children}
-          </LenisProvider>
-        </PulseProvider>
+        <LenisProvider>
+          <RevealObserver />
+          <CustomCursor />
+          <Header />
+          {children}
+        </LenisProvider>
       </body>
     </html>
   );

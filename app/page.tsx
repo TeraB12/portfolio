@@ -1,35 +1,37 @@
 import { Hero } from "@/components/sections/Hero";
-import { Projects } from "@/components/sections/Projects";
+import { Problem } from "@/components/sections/Problem";
 import { Services } from "@/components/sections/Services";
+import { Projects } from "@/components/sections/Projects";
 import { Process } from "@/components/sections/Process";
-import { CaseStudies } from "@/components/sections/CaseStudies";
-import { About } from "@/components/sections/About";
-import { Skills } from "@/components/sections/Skills";
-import { Stack } from "@/components/sections/Stack";
-import { FavoriteTech } from "@/components/sections/FavoriteTech";
-import { Timeline } from "@/components/sections/Timeline";
+import { Company } from "@/components/sections/Company";
+import { Tech } from "@/components/sections/Tech";
+import { History } from "@/components/sections/History";
 import { Contact } from "@/components/sections/Contact";
 import { Footer } from "@/components/sections/Footer";
+import { EcgLine } from "@/components/signal/EcgLine";
 
 /**
- * Orden de la página como empresa: primero la PRUEBA (los proyectos que ya
- * están funcionando), después qué vendemos y cómo trabajamos, y recién
- * entonces quiénes somos. El orden DEBE coincidir con WAYPOINTS en
- * content/data.ts, que alimenta la spine.
+ * El orden cuenta una historia: primero el diagnóstico (01), después qué
+ * hacemos (02), después la PRUEBA de que funciona (03), cómo se trabaja (04),
+ * quiénes somos (05), con qué está hecho (06), de dónde venimos (07) y recién
+ * al final el pedido de contacto (08).
  */
 export default function Home() {
   return (
     <main>
       <Hero />
-      <Projects />
+      <Problem />
+
+      <div className="shell">
+        <EcgLine />
+      </div>
+
       <Services />
+      <Projects />
       <Process />
-      <CaseStudies />
-      <About />
-      <Skills />
-      <Stack />
-      <FavoriteTech />
-      <Timeline />
+      <Company />
+      <Tech />
+      <History />
       <Contact />
       <Footer />
     </main>

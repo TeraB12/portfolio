@@ -1,102 +1,84 @@
-"use client";
+import { COMPANY, FOOTER } from "@/content/data";
+import { EcgLine } from "@/components/signal/EcgLine";
+import { Dot } from "@/components/ui/Dot";
+import { HashLink } from "@/components/ui/HashLink";
+
+const linkClass =
+  "link-ul self-start text-[14px] text-ink-60 transition-colors duration-300 hover:text-ink";
 
 /**
- * PULSO · Footer: barra de estado de sistema.
- * La señal que nació en el hero termina acá, en un punto que late para siempre.
- * Telemetría honesta: uptime real de la sesión, hora real de Córdoba y los
- * segundos desde el último latido del reloj global.
+ * Cierre: el trazo vuelve una última vez, más lento, y el nombre queda grande.
  */
-
-import { useEffect, useRef, useState } from "react";
-import { ArrowUp } from "lucide-react";
-import { useReducedMotion } from "motion/react";
-import { FOOTER } from "@/content/data";
-import { Led } from "@/components/ui/Led";
-import { usePulse } from "@/lib/pulse";
-import { scrollToTop } from "@/lib/scroll";
-import { useCordobaTime, useUptime } from "@/lib/telemetry";
-
-/**
- * Segundos desde el último latido del reloj global.
- * Devuelve null hasta el primer latido (y siempre con reduced-motion,
- * donde el reloj no corre: telemetría honesta, no se inventa señal).
- */
-function useSecondsSinceLastBeat(): number | null {
-  const { onBeat } = usePulse();
-  const reduced = useReducedMotion();
-  const lastBeatAt = useRef<number | null>(null);
-  const [seconds, setSeconds] = useState<number | null>(null);
-
-  useEffect(() => {
-    if (reduced) return;
-
-    const unsubscribe = onBeat(() => {
-      lastBeatAt.current = Date.now();
-      setSeconds(0);
-    });
-    const id = setInterval(() => {
-      if (lastBeatAt.current === null) return;
-      setSeconds(Math.max(0, Math.floor((Date.now() - lastBeatAt.current) / 1000)));
-    }, 1000);
-
-    return () => {
-      unsubscribe();
-      clearInterval(id);
-    };
-  }, [onBeat, reduced]);
-
-  return seconds;
-}
-
-/** Strip de telemetría mono: items separados por hairlines, sin puntos medios. */
-function TelemetryStrip() {
-  const uptime = useUptime();
-  const time = useCordobaTime();
-  const lastSignal = useSecondsSinceLastBeat();
-
-  return (
-    <div className="flex flex-wrap items-center gap-4 font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-      <span>{FOOTER.statusPrefix}</span>
-
-      <span className="border-l border-hairline pl-4 whitespace-nowrap">
-        UPTIME <span className="inline-block min-w-[8ch]">{uptime}</span>
-      </span>
-
-      <span className="hidden border-l border-hairline pl-4 whitespace-nowrap sm:inline-block">
-        <span className="inline-block min-w-[5ch]">{time}</span> CBA
-      </span>
-
-      <span className="hidden min-w-[21ch] border-l border-hairline pl-4 whitespace-nowrap sm:inline-block">
-        {lastSignal === null ? "" : `ÚLTIMA SEÑAL HACE ${lastSignal}S`}
-      </span>
-    </div>
-  );
-}
-
 export function Footer() {
   return (
-    <footer className="border-t border-hairline">
-      <div className="mx-auto max-w-[1400px] px-6 py-10 md:px-12 lg:pl-28 lg:pr-20">
-        {/* Fila 1: punto final de la señal + telemetría */}
-        <div className="flex flex-wrap items-center justify-between gap-6">
-          <div className="flex items-center gap-3">
-            <Led size="md" />
-            <span className="text-sm text-dim">{FOOTER.rights}</span>
+    <footer className="border-t border-hairline pb-8 pt-[clamp(48px,6vw,72px)]">
+      <div className="shell">
+        <EcgLine
+          height={44}
+          dash="70 1330"
+          duration="6.5s"
+          trackOpacity={0.11}
+          className="mb-10"
+        />
+
+        <div className="flex flex-wrap items-end justify-between gap-8">
+          <div>
+            <div className="text-[clamp(38px,7vw,86px)] font-extrabold leading-[0.9] tracking-[-0.055em]">
+              {COMPANY.wordmark}
+            </div>
+            <div className="mt-3 font-mono text-[10px] uppercase tracking-[0.2em] text-ink-35">
+              {FOOTER.tagline}
+            </div>
           </div>
 
-          <TelemetryStrip />
+          <div className="flex flex-wrap gap-9">
+            {FOOTER.columns.map((col) => (
+              <nav
+                key={col.title}
+                aria-label={col.title}
+                className="flex flex-col items-start gap-[11px]"
+              >
+                <span className="t-label text-ink-50">{col.title}</span>
+                {col.links.map((l) =>
+                  l.href.startsWith("#") ? (
+                    <HashLink key={l.label} href={l.href} className={linkClass}>
+                      {l.label}
+                    </HashLink>
+                  ) : (
+                    <a
+                      key={l.label}
+                      href={l.href}
+                      {...(l.external
+                        ? { target: "_blank", rel: "noopener" }
+                        : {})}
+                      className={linkClass}
+                    >
+                      {l.label}
+                    </a>
+                  ),
+                )}
+              </nav>
+            ))}
+          </div>
         </div>
 
-        {/* Fila 2: volver arriba */}
-        <div className="mt-8 flex flex-wrap items-center justify-end gap-4">
-          <button
-            type="button"
-            onClick={scrollToTop}
-            className="-mx-2 -my-3 inline-flex items-center gap-2 px-2 py-3 font-mono text-[12px] uppercase tracking-wide text-dim transition-colors hover:text-pulse"
+        <div className="mt-11 flex flex-wrap items-center justify-between gap-[18px] border-t border-[rgba(244,241,234,0.09)] pt-[22px]">
+          <span className="font-mono text-[10.5px] uppercase tracking-[0.14em] text-ink-50">
+            {FOOTER.rights}
+          </span>
+          <div className="flex items-center gap-2">
+            <Dot size={5} />
+            <span className="font-mono text-[10.5px] uppercase tracking-[0.14em] text-ink-50">
+              {FOOTER.status}
+            </span>
+          </div>
+          <HashLink
+            href="#inicio"
+            top
+            className="link-ul font-mono text-[10.5px] uppercase tracking-[0.14em] text-ink-50 transition-colors duration-300 hover:text-ink"
           >
             {FOOTER.backToTop}
-            <ArrowUp aria-hidden className="h-3.5 w-3.5" strokeWidth={1.5} />
-          </button>
+          </HashLink>
         </div>
       </div>
     </footer>

@@ -14,6 +14,9 @@ declare global {
   }
 }
 
+/** header fijo (70px) + aire. Espeja el scroll-margin-top de globals.css */
+const HEADER_OFFSET = 88;
+
 function focusInto(el: HTMLElement): void {
   el.tabIndex = -1;
   el.focus({ preventScroll: true });
@@ -24,8 +27,9 @@ export function scrollToHash(hash: string): void {
   const el = document.getElementById(id);
   if (!el) return;
   if (window.__lenis) {
-    window.__lenis.scrollTo(el, { offset: 0 });
+    window.__lenis.scrollTo(el, { offset: -HEADER_OFFSET });
   } else {
+    // el nativo respeta el scroll-margin-top de la sección
     el.scrollIntoView({ behavior: "smooth" });
   }
   focusInto(el);

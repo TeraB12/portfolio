@@ -1,76 +1,93 @@
-"use client";
+import { PROCESS } from "@/content/data";
+import { Cta } from "@/components/ui/Cta";
 
 /**
- * PULSO · Cómo trabajamos (id "proceso").
- * Los pasos de la relación con el cliente, de la primera charla al sistema
- * andando. Cada paso es un nodo sobre una hairline con un punto led que late
- * con el reloj global. Desktop: cuatro columnas conectadas; mobile: apilado.
- * Baja el miedo a comprarle a alguien que no conocés: todo claro, sin vueltas.
+ * 04 — Cómo trabajamos. Los cuatro pasos van unidos por una línea horizontal
+ * que arranca dorada y se apaga hacia la derecha: el camino de la primera
+ * charla al sistema andando.
  */
-
-import { PROCESS } from "@/content/data";
-import { Section } from "@/components/ui/Section";
-import { SectionTitle } from "@/components/ui/SectionTitle";
-import { Reveal } from "@/components/ui/Reveal";
-import { MonoLabel } from "@/components/ui/MonoLabel";
-import { ButtonLink } from "@/components/ui/Button";
-import { scrollToHash } from "@/lib/scroll";
-import { cn } from "@/lib/utils";
-
 export function Process() {
   return (
-    <Section id="proceso">
-      <SectionTitle eyebrow={PROCESS.eyebrow} title={PROCESS.title} />
+    <section
+      id="proceso"
+      className="border-t border-hairline bg-alt py-[clamp(80px,10vw,132px)]"
+    >
+      <div className="shell">
+        <div className="mb-[clamp(44px,5vw,68px)] flex flex-wrap items-end justify-between gap-6">
+          <div>
+            <div data-reveal="rise" className="t-eyebrow mb-[22px]">
+              {PROCESS.eyebrow}
+            </div>
+            <h2 data-reveal="mask" className="t-h2 max-w-[22ch]">
+              {PROCESS.title}
+            </h2>
+          </div>
+          <p
+            data-reveal="rise"
+            className="max-w-[34ch] text-[15px] leading-[1.6] text-ink-50"
+          >
+            {PROCESS.intro}
+          </p>
+        </div>
 
-      <Reveal>
-        <p className="mb-14 max-w-[52ch] text-lg leading-relaxed text-dim md:mb-20">
-          {PROCESS.intro}
-        </p>
-      </Reveal>
-
-      <ol className="grid grid-cols-1 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-x-10">
-        {PROCESS.steps.map((step, i) => (
-          <li key={step.n}>
-            <Reveal delay={i * 0.1}>
-              <div className="relative flex flex-col border-t border-hairline pt-6">
-                {/* nodo led sobre la línea: el paso "enciende" con el latido */}
-                <span
+        <div className="relative">
+          <div
+            aria-hidden
+            className="absolute inset-x-0 top-[52px] hidden h-px md:block"
+            style={{
+              background:
+                "linear-gradient(90deg,rgba(233,178,62,0.5) 0%,rgba(244,241,234,0.14) 100%)",
+            }}
+          />
+          <div className="rule-grid [grid-template-columns:repeat(auto-fit,minmax(min(240px,100%),1fr))]">
+            {PROCESS.steps.map((step, i) => (
+              <div
+                key={step.n}
+                data-reveal="rise"
+                /* los bordes al ras solo en xl, que es donde la grilla es
+                   siempre de 4 columnas; abajo el padding va parejo para que
+                   no se desalineen las filas */
+                className="bg-alt pb-[30px] md:px-[26px] xl:first:pl-0 xl:last:pr-0"
+              >
+                <div className="flex h-[52px] items-center">
+                  <span className="font-mono text-[11px] tracking-[0.2em] text-ink-35">
+                    {step.n}
+                  </span>
+                </div>
+                <div
                   aria-hidden
-                  className={cn(
-                    "absolute -top-[3.5px] left-0 h-[7px] w-[7px] bg-pulse",
-                    i % 2 === 0 ? "led" : "led-b",
-                  )}
+                  className={`relative top-[-5px] mb-[26px] h-[11px] w-[11px] ${
+                    i === 0 ? "bg-accent" : "bg-[rgba(244,241,234,0.28)]"
+                  }`}
                 />
-                <MonoLabel tone="dim">{`Paso ${step.n}`}</MonoLabel>
-                <h3 className="mt-4 font-display text-2xl font-bold leading-tight tracking-[-0.01em] text-ink">
+                <h3 className="mb-3.5 text-[clamp(20px,1.9vw,25px)] leading-[1.12] tracking-[-0.03em]">
                   {step.title}
                 </h3>
-                <p className="mt-3 text-[15px] leading-relaxed text-dim">
+                <p className="text-[14.5px] leading-[1.6] text-ink-50">
                   {step.detail}
                 </p>
               </div>
-            </Reveal>
-          </li>
-        ))}
-      </ol>
+            ))}
+          </div>
+        </div>
 
-      <Reveal delay={0.2}>
-        <div className="mt-14 flex flex-col items-start gap-5 border-t border-hairline pt-10 md:mt-20 md:flex-row md:items-center md:justify-between">
-          <p className="max-w-[52ch] text-[15px] leading-relaxed text-dim">
+        <div
+          data-reveal="rise"
+          className="mt-[clamp(40px,5vw,60px)] flex flex-wrap items-center justify-between gap-[26px] border border-[rgba(244,241,234,0.13)] p-[clamp(24px,3vw,36px)]"
+        >
+          <p className="max-w-[44ch] text-[clamp(17px,1.7vw,22px)] leading-[1.4] tracking-[-0.02em]">
             {PROCESS.closer}
           </p>
-          <ButtonLink
-            href="#contacto"
-            onClick={(e) => {
-              e.preventDefault();
-              scrollToHash("#contacto");
-            }}
-            className="w-full shrink-0 sm:w-auto"
+          <Cta
+            href={PROCESS.closerCta.href}
+            magnetic
+            arrow
+            className="whitespace-nowrap px-[26px] py-4 text-[14px]"
           >
-            {PROCESS.closerCta}
-          </ButtonLink>
+            {PROCESS.closerCta.label}
+          </Cta>
         </div>
-      </Reveal>
-    </Section>
+      </div>
+    </section>
   );
 }
