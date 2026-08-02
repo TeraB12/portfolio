@@ -258,11 +258,66 @@ section[id] {
 }
 
 /* ============================================================
+   Entradas de arriba de todo (hero)
+
+   El hero está en pantalla desde el primer frame, así que NO usa el
+   observer: hacerlo esperaría a que hidrate el bundle antes de empezar
+   siquiera el retraso, y el titular es justo lo que no puede tardar.
+   Estas entran por animación CSS, que arranca en el primer paint.
+
+   fill-mode backwards: sostiene el estado inicial durante el retraso y
+   al terminar suelta el elemento a su estado normal. Por eso no queda
+   un clip-path recortando descendentes (el H1 tiene line-height 0.94)
+   ni hace falta limpiarlo después como en los reveals.
+   ============================================================ */
+[data-enter] {
+  --rd: 0ms;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  [data-enter="rise"] {
+    animation: enter-rise 0.95s var(--e) var(--rd) backwards;
+  }
+  [data-enter="mask"] {
+    animation: enter-mask 1.25s var(--e) var(--rd) backwards;
+  }
+}
+
+@keyframes enter-rise {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+    filter: blur(5px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+
+/* el `to` va explícito porque clip-path no interpola contra `none`, y
+   cierra con inset NEGATIVO: con line-height 0.94 los glifos se salen
+   ~3px de su caja, así que terminar en inset(0) los recortaría y el
+   titular pegaría un salto al soltarse */
+@keyframes enter-mask {
+  from {
+    clip-path: inset(0% 0% 108% 0%);
+    transform: translateY(28px);
+  }
+  to {
+    clip-path: inset(-15% 0% -15% 0%);
+    transform: none;
+  }
+}
+
+/* ============================================================
    Reveals por scroll
 
-   El estado inicial lo pone el CSS (así no hay flash antes de que
-   hidrate) y <RevealObserver /> agrega data-shown al entrar al
-   viewport. Sin JS, el <noscript> del layout lo anula todo.
+   Para todo lo que está abajo del pliegue. El estado inicial lo pone el
+   CSS (así no hay flash antes de que hidrate) y <RevealObserver />
+   agrega data-shown al entrar al viewport. Sin JS, el <noscript> del
+   layout lo anula todo.
    ============================================================ */
 [data-reveal] {
   --rd: 0ms;
@@ -277,8 +332,10 @@ section[id] {
       clip-path 1.25s var(--e) var(--rd),
       transform 1.25s var(--e) var(--rd);
   }
+  /* inset negativo por lo mismo que enter-mask: los títulos tienen
+     line-height < 1 y sus glifos se salen de la caja */
   [data-reveal="mask"][data-shown] {
-    clip-path: inset(0% 0% 0% 0%);
+    clip-path: inset(-15% 0% -15% 0%);
     transform: none;
   }
 

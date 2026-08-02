@@ -112,7 +112,32 @@ panel blanco y no hay CSS que lo cambie. Para eso está `<Choice>`.
 
 Un solo easing en todo el sitio: **`cubic-bezier(.16,1,.3,1)`** (`var(--e)` / `ease-site`).
 
-### Entradas por scroll
+### Entrada del hero (`data-enter`) — NO usa el observer
+
+El hero está en pantalla desde el primer frame. Si esperara al `IntersectionObserver`,
+esperaría a que **hidrate el bundle** antes de empezar siquiera su retraso, y el titular es
+justo lo que no puede tardar (además es el elemento de LCP). Por eso los cuatro bloques del
+hero entran con **animación CSS pura**, que arranca en el primer paint:
+
+```
+data-enter="rise"   →  enter-rise, 0.95s
+data-enter="mask"   →  enter-mask, 1.25s
+```
+
+Con el retraso en `--rd` vía `rd()`: 220 / 340 / 460 / 580ms.
+
+Dos detalles que hay que respetar si se tocan:
+- `animation-fill-mode: backwards`. Sostiene el estado inicial durante el retraso y al
+  terminar **suelta** el elemento a su estado normal, así no queda un clip-path colgado
+- los keyframes llevan `to` explícito, porque `clip-path` no interpola contra `none`. El
+  `to` de `enter-mask` cierra en inset **negativo**: los títulos tienen `line-height < 1` y
+  sus glifos se salen ~3px de la caja, así que terminar en `inset(0)` los recortaría y el
+  titular pegaría un salto. Vale lo mismo para la variante `mask` del observer
+
+**Regla:** cualquier cosa que quede arriba del pliegue va con `data-enter`, no con
+`data-reveal`.
+
+### Entradas por scroll (`data-reveal`) — para todo lo de abajo del pliegue
 
 El estado inicial lo pone **CSS** (por eso no hay flash antes de hidratar) y
 `<RevealObserver />` agrega `data-shown` al entrar al viewport. Un solo observer para toda

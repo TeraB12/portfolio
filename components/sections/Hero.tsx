@@ -75,7 +75,7 @@ export function Hero() {
         className="shell relative w-full pb-[clamp(56px,7vw,96px)]"
       >
         <div
-          data-reveal="rise"
+          data-enter="rise"
           style={rd(220)}
           className="mb-[clamp(24px,3vw,38px)] flex items-center gap-3"
         >
@@ -86,7 +86,7 @@ export function Hero() {
         </div>
 
         <h1
-          data-reveal="mask"
+          data-enter="mask"
           style={rd(340)}
           className="t-h1 max-w-[16ch] text-balance"
         >
@@ -98,14 +98,14 @@ export function Hero() {
 
         <div className="mt-[clamp(32px,4vw,52px)] flex flex-wrap items-end gap-[clamp(28px,5vw,72px)]">
           <p
-            data-reveal="rise"
+            data-enter="rise"
             style={rd(460)}
             className="max-w-[46ch] text-[clamp(16px,1.35vw,19px)] leading-[1.55] text-ink-70"
           >
             {HERO.intro}
           </p>
           <div
-            data-reveal="rise"
+            data-enter="rise"
             style={rd(580)}
             className="flex flex-wrap gap-3"
           >
