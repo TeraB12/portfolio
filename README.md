@@ -49,11 +49,15 @@ Dos reglas que se rompen seguido:
 
 | Variable | Para qué |
 |---|---|
-| `PULSO_PANEL_WEBHOOK` | URL del panel de control adonde se reenvían los pedidos de presupuesto |
-| `PULSO_PANEL_TOKEN` | Bearer token, si el panel pide autenticación |
+| `PULSO_PANEL_WEBHOOK` | Recepción del panel de control: `https://<api-del-panel>/api/v1/consultas` |
+| `PULSO_PANEL_TOKEN` | Clave con la que el panel acepta la entrega (su `CONSULTAS_INTAKE_KEY`) |
 
 Sin `PULSO_PANEL_WEBHOOK` el formulario sigue funcionando: acepta el pedido y lo deja en el
-log del server.
+log del server. Lo mismo si el panel responde error: nunca se pierde un interesado porque el
+otro deploy tuvo un mal momento.
+
+Los dos proyectos son independientes y esto es lo único que los toca: este sitio manda, el
+panel recibe. No comparten base, ni sesión, ni código.
 
 ## Verificar antes de publicar
 

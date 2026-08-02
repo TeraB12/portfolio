@@ -470,6 +470,9 @@ export const CONTACT = {
   formNote: "Nos llega directo al panel y te respondemos el mismo día",
   fields: {
     nombre: { label: "Tu nombre", placeholder: "Nombre y apellido" },
+    // El único dato de contacto que pide el formulario, y por eso es
+    // obligatorio: la respuesta sale por mail desde el panel de control.
+    email: { label: "Tu email", placeholder: "nombre@correo.com" },
     empresa: { label: "Tu empresa", placeholder: "Nombre del comercio o empresa" },
     tipo: { label: "Qué necesitás", placeholder: "Elegí una opción" },
     mensaje: {
@@ -492,6 +495,7 @@ export const CONTACT = {
     "No pudimos enviarlo. Probá de nuevo o escribinos por WhatsApp.",
   errors: {
     nombre: "Decinos tu nombre así sabemos con quién hablamos.",
+    email: "Dejanos un email, que es por donde te contestamos.",
     tipo: "Elegí qué es lo que estás buscando.",
     mensaje: "Contanos aunque sea en dos líneas de qué se trata.",
   },

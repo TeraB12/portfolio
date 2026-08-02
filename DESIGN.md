@@ -190,10 +190,19 @@ Notas por sección:
 
 ## 7. Contacto y el formulario
 
-El formulario postea a `/api/presupuesto`, que reenvía al panel de control de Pulso.
-La URL del panel va en `PULSO_PANEL_WEBHOOK` (y `PULSO_PANEL_TOKEN` si pide auth). Mientras
-la variable no esté, el pedido se acepta igual y queda en el log del server: preferimos eso
-antes que darle un error a alguien que quiere contratarnos.
+El formulario postea a `/api/presupuesto`, que reenvía al panel de control de Pulso
+(sección **Consultas**). La URL del panel va en `PULSO_PANEL_WEBHOOK` y la clave en
+`PULSO_PANEL_TOKEN`. Mientras la variable no esté, el pedido se acepta igual y queda en el
+log del server: preferimos eso antes que darle un error a alguien que quiere contratarnos.
+
+Cinco campos, en este orden: **nombre · email · empresa · qué necesitás · contanos**. El
+**email es obligatorio** y no es un trámite: es el único dato de contacto que se pide, y es
+por donde se contesta desde el panel. Empresa es el único opcional.
+
+Hay un **campo trampa** (honeypot) fuera de la vista, del tabulador y del lector de pantalla.
+Si viene completo, el pedido se descarta y se responde OK igual, para no avisarle al bot.
+No hay control por tiempo de tipeo: frenar a alguien que escribe rápido cuesta más que el
+spam que evita.
 
 El botón dice **"Enviar"**, no "Enviar por WhatsApp". Las dos vías directas (WhatsApp y mail)
 están al lado, sin formulario de por medio.
