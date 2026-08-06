@@ -26,7 +26,10 @@ export const COMPANY = {
   wordmark: "PULSO",
   descriptor: "Software a medida",
   location: "Córdoba, Argentina",
-  email: "mateovpereyra@gmail.com",
+  // Casilla del dominio propio. No es un buzón aparte: Cloudflare Email
+  // Routing la reenvía a mateovpereyra@gmail.com, así que se sigue leyendo
+  // desde el mismo lugar de siempre.
+  email: "atencion@pulsosoftware.com",
   phoneDisplay: "+54 9 351 203 7813",
   whatsappNumber: "5493512037813",
   github: "https://github.com/TeraB12",
