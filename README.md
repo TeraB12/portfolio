@@ -1,6 +1,6 @@
 # Pulso · sitio de empresa
 
-Sitio de [plataformaterab.com](https://plataformaterab.com): Pulso, empresa de desarrollo de
+Sitio de [pulsosoftware.com](https://pulsosoftware.com): Pulso, empresa de desarrollo de
 software a medida de Córdoba, Argentina.
 
 Next.js 16 (App Router) · React 19 · Tailwind CSS 4 · TypeScript · three.js para el pulso

@@ -538,6 +538,44 @@ export const SEO = {
   title: "Pulso · Software a medida para empresas | Córdoba, Argentina",
   description:
     "Empresa de desarrollo de software a medida en Córdoba. Sistemas de gestión, automatización con IA, tiendas online e integraciones con AFIP, Mercado Pago y Mercado Libre. Resolvemos, automatizamos y optimizamos los procesos de tu empresa. Pedí tu presupuesto.",
-  url: "https://plataformaterab.com",
+  url: "https://pulsosoftware.com",
   locale: "es_AR",
+
+  // Lo que se dibuja en la tarjeta cuando alguien pega el link en WhatsApp,
+  // LinkedIn o X. La imagen se genera en app/opengraph-image.tsx.
+  ogImageAlt:
+    "Pulso, software a medida para empresas. Córdoba, Argentina.",
+
+  // ---------------------------------------------------------------------------
+  // Lo que sigue NO se ve en pantalla: es lo que se le declara al buscador en
+  // el JSON-LD (lib/jsonLd.ts) sobre a qué se dedica Pulso y dónde trabaja.
+  // Es la parte que hace que Google entienda el rubro, no solo las palabras.
+  // ---------------------------------------------------------------------------
+  foundingYear: "2022",
+
+  // Dónde se atiende. La ciudad primero, después la provincia y el país.
+  areaServed: ["Córdoba", "Provincia de Córdoba", "Argentina"],
+
+  // El rubro, en los términos con los que la gente lo busca. Solo cosas que
+  // Pulso realmente hace: si algo no está en SERVICES o en PROJECTS, no va acá.
+  knowsAbout: [
+    "Desarrollo de software a medida",
+    "Sistemas de gestión a medida",
+    "Software de gestión para empresas",
+    "Sistema de stock y depósito",
+    "Sistema de facturación electrónica",
+    "Punto de venta",
+    "Cuentas corrientes",
+    "Automatización de procesos",
+    "Automatización con inteligencia artificial",
+    "Tiendas online a medida",
+    "Desarrollo web a medida",
+    "Integración con AFIP",
+    "Integración con Mercado Pago",
+    "Integración con Mercado Libre",
+    "Integración con WhatsApp",
+    "Aplicaciones móviles",
+    "Software para pymes",
+    "Migración de sistemas",
+  ],
 } as const;
